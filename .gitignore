@@ -1,0 +1,11 @@
+_gitignore/
+qc/qc_out/
+/*.sh
+*/__pycache__
+*.pid
+*.png
+*.pyc
+*.log
+CMIP6
+cmip6_processed_data
+commit_message.txt
