@@ -256,7 +256,7 @@ def lonlat_bnds_atm_file(model_id):
     if lonlat_bnds_atm_nc_names[model_id] is None:
         raise FileNotFoundError
     else:
-        return areacella_file[model_id]
+        return areacella_file(model_id)
 
 
 
