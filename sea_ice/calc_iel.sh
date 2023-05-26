@@ -1,20 +1,22 @@
 #!/bin/bash
 
 # Default command-line arguments:
-model="CESM2-FV2"
+model="CESM2"
 experiment="piControl"
-res="2"
+members=("r1i1p1f1")
+res="1"
 remapMethod="bil"
 overwriteWeights=false
 overwriteRemapped=false
 keepRemappedSiconc=false
 
 # : after flag indicates that the option requires an argument
-while getopts m:x:r:c:wok flag
+while getopts m:x:e:r:c:wok flag
 do
     case "${flag}" in
         m) model=${OPTARG};;
         x) experiment=${OPTARG};;
+        e) members=(${OPTARG//,/ });;
         r) res=${OPTARG};;
         c) remapMethod=${OPTARG};;
         w) overwriteWeights=true;;
@@ -22,8 +24,6 @@ do
         k) keepRemappedSiconc=true;;
     esac
 done
-
-members=("r1i1p1f1")
 
 baseDir="/storage/basic/cpom/gb919150/CMIP6"
 
