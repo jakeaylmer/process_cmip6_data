@@ -1,3 +1,5 @@
+import numpy as np
+
 from src import (
     load_raw_data as lrd,
     metadata as md,
@@ -22,6 +24,10 @@ def main():
     
     lon, lat, areacello = lrd.areacello(cmd.model)
     lon_bnds, lat_bnds  = lrd.bndscello(cmd.model)
+    
+    areacello = np.where(
+        areacello >= md.default_original_missing_value,
+        md.default_new_missing_value, areacello)
     
     # ------------------------------------------------------- #
     
