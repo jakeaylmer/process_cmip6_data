@@ -228,6 +228,18 @@ nc_var_nq_1deg_bil   = ""
 nc_var_nq_05deg_bil  = ""
 nc_var_nq_025deg_bil = ""
 
+diag_nq_4deg_dis   = "_4deg_dis"
+diag_nq_2deg_dis   = "_2deg_dis"
+diag_nq_1deg_dis   = "_1deg_dis"
+diag_nq_05deg_dis = "_05deg_dis"   # 0.5 deg
+diag_nq_025deg_dis = "_025deg_dis"  # 0.25 deg
+
+nc_var_nq_4deg_dis   = ""
+nc_var_nq_2deg_dis   = ""
+nc_var_nq_1deg_dis   = ""
+nc_var_nq_05deg_dis  = ""
+nc_var_nq_025deg_dis = ""
+
 
 # Other common NetCDF settings:
 # ----------------------------------------------- #
