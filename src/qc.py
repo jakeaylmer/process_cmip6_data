@@ -310,6 +310,10 @@ def get_data(diagnostic="dhdt_pot_residual_hfbasin",
               + experiment_1 + ("" if experiment_2 == "none"
                   else (" and/or " + experiment_2)))
         
+        print("(If \'" + diagnostic + "\' is a keyword there "
+              + "may be variants available for this model -- "
+              + "specify an alias or use --seldiag)")
+        
         if experiment_2 == "none":
             yr_s, yr_e = year_range[experiment_1][model_id]
             ripf = members[model_id][experiment_1]

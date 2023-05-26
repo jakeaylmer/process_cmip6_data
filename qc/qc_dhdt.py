@@ -24,8 +24,7 @@ def main():
     # Load from keyword (def. in api._diagnostic_definitions):
     dhdt_n, dhdt_s, year, r_vals, ripf, lat_eval_n, lat_eval_s,\
         data_paths[0] = qc.get_data("dhdt", **gd_kw)
-    dhdt_wm2_n, dhdt_wm2_s, year, r_vals, ripf, lat_eval_n, \
-        lat_eval_s, data_paths[1] = \
+    dhdt_wm2_n, dhdt_wm2_s, _, _, _, _, _, data_paths[1] = \
             qc.get_data("dhdt_wm-2", **gd_kw)
     
     data_paths = qc.shorten_data_path_labels(data_paths)
@@ -54,23 +53,36 @@ def main():
     
     fig1, ax1 = qc.start_figure(**descr_kw)
     
-    descr_kw["diagnostic_description"] = full_diag_names[1]
-    fig2, ax2 = qc.start_figure(**descr_kw)
-    
     year_ma, dhdt_ma_n = qc.moving_average(year, dhdt_n,
                                            cmd.movavg)
     _, dhdt_ma_s = qc.moving_average(year, dhdt_s, cmd.movavg)
-    _, dhdt_wm2_ma_n = qc.moving_average(year, dhdt_wm2_n, cmd.movavg)
-    _, dhdt_wm2_ma_s = qc.moving_average(year, dhdt_wm2_s, cmd.movavg)
+    
+    fig_list = [fig1]
+    ax_list = [ax1]
+    ydata_list = [[dhdt_n, dhdt_s]]
+    ydata_ma_list = [[dhdt_ma_n, dhdt_ma_s]]
+    j_list = [0]
+    ylabel_list = [nf.field_units["heattransport"]]
+    
+    if len(data_paths) == 3:
+        # has W m-2 data
+        descr_kw["diagnostic_description"] = full_diag_names[1]
+        fig2, ax2 = qc.start_figure(**descr_kw)
+        
+        fig_list.append(fig2)
+        ax_list.append(ax2)
+        j_list.append(1)
+        ylabel_list.append(nf.field_units["heatflux"])
+        ydata_list.append([dhdt_wm2_n, dhdt_wm2_s])
+        
+        _, dhdt_wm2_ma_n = qc.moving_average(year, dhdt_wm2_n, cmd.movavg)
+        _, dhdt_wm2_ma_s = qc.moving_average(year, dhdt_wm2_s, cmd.movavg)
+        
+        ydata_ma_list.append([dhdt_wm2_ma_n, dhdt_wm2_ma_s])
     
     for fig, ax, ydata, ydata_ma, j, ylabel in zip(
-            [fig1, fig2], [ax1, ax2],
-            [[dhdt_n, dhdt_s], [dhdt_wm2_n, dhdt_wm2_s]],
-            [[dhdt_ma_n, dhdt_ma_s],
-                [dhdt_wm2_ma_n, dhdt_wm2_ma_s]],
-            [0, 1],
-            [nf.field_units["heattransport"],
-                nf.field_units["heatflux"]]):
+            fig_list, ax_list, ydata_list, ydata_ma_list,
+            j_list, ylabel_list):
         
         # Full time series data:
         qc.plot_data(ax, xdata=year, ydata=ydata, ens_index=e,
