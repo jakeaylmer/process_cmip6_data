@@ -149,7 +149,7 @@ def integrate_horizontally_exact(field, lat_bnds, areacell,
     
     Parameters
     ----------
-    field : array (nt, n_ens, n_lat)
+    field : array (nt, n_ens, n_lat, n_lon)
         Field to integrate for each time (axis=0) and
         ensemble member (axis=1).
     
@@ -158,9 +158,8 @@ def integrate_horizontally_exact(field, lat_bnds, areacell,
         is the southward latitude and lat_bnds[i,1]
         is the northward latitude of cell i.
     
-    areacell : array (n_lat,)
-        Cell areas (collapsed to the latitude axis only,
-        as the values are independent of longitude).
+    areacell : array (n_lat, n_lon)
+        Cell areas in m2.
     
     """
     
@@ -189,7 +188,7 @@ def integrate_horizontally_exact(field, lat_bnds, areacell,
         
         for j in range(n_lat):
             
-            field_hint[:,:,j] = np.sum(
+            field_hint[:,:,j] = np.nansum(
                 field[:,:,j:,:]*areacell[npna,npna,j:,:],
                 axis=(2,3)
             )
@@ -220,7 +219,7 @@ def integrate_horizontally_exact(field, lat_bnds, areacell,
         # to and including j
         
         for j in range(n_lat):
-            field_hint[:,:,j] = np.sum(
+            field_hint[:,:,j] = np.nansum(
                 field[:,:,:j+1]*areacell[npna,npna,:j+1,:],
                 axis=(2,3)
             )
