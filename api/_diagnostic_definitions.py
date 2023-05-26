@@ -173,15 +173,16 @@ for x in ["pot", "con"]:
 # Sea ice diagnostics     #
 # ----------------------- #
 for res in ["4deg", "2deg", "1deg", "05deg", "025deg"]:
-    _define_diagnostic("iel", f"iel_{res}_bil",
-        diag_name="iel" + nf.diag_nq_zonal_mean,
-        time_methods="yearly", coord_vars=[],
-        other_methods=f"{res}_bil")
-
-    _define_diagnostic("iel_mon", f"iel_{res}_bil_mon",
-        diag_name="iel" + nf.diag_nq_zonal_mean,
-        time_methods="monthly", coord_vars=[],
-        other_methods=f"{res}_bil")
+    for method in ["bil", "dis"]:
+        _define_diagnostic("iel", f"iel_{res}_{method}",
+            diag_name="iel" + nf.diag_nq_zonal_mean,
+            time_methods="yearly", coord_vars=[],
+            other_methods=f"{res}_{method}")
+        
+        _define_diagnostic("iel_mon", f"iel_{res}_{method}_mon",
+            diag_name="iel" + nf.diag_nq_zonal_mean,
+            time_methods="monthly", coord_vars=[],
+            other_methods=f"{res}_{method}")
 
 for x in "ae":
     _define_diagnostic(f"si{x}", f"si{x}",
