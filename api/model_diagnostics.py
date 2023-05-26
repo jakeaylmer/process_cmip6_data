@@ -68,6 +68,7 @@ diagnostic_per_model = {
         "CNRM-CM6-1-HR": ["iel_025deg_bil"],
         "CNRM-ESM2-1"  : ["iel_1deg_bil"],
         "GFDL-ESM4"    : ["iel_05deg_bil"],
+        "GISS-E2-2-G"  : ["iel_gn"],
         "IPSL-CM6A-LR" : [f"iel_{x}deg_bil" for x in ["1", "05", "025", "2", "4"]],
         "MIROC6"       : ["iel_1deg_bil"],
         "MPI-ESM1-2-HR": ["iel_05deg_bil"],

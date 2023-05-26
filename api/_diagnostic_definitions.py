@@ -205,6 +205,16 @@ for res in ["4deg", "2deg", "1deg", "05deg", "025deg"]:
             time_methods="monthly", coord_vars=[],
             other_methods=f"{res}_{method}")
 
+_define_diagnostic("iel", "iel_gn",
+    diag_name="iel" + nf.diag_nq_zonal_mean,
+    time_methods="yearly", coord_vars=[],
+    other_methods="native")
+
+_define_diagnostic("iel_mon", "iel_gn_mon",
+    diag_name="iel" + nf.diag_nq_zonal_mean,
+    time_methods="monthly", coord_vars=[],
+    other_methods="native")
+
 for x in "ae":
     _define_diagnostic(f"si{x}", f"si{x}",
         diag_name=f"si{x}", time_methods="yearly",
