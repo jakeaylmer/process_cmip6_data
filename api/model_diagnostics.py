@@ -58,20 +58,69 @@ print_defined_diagnostics = ddef.print_defined_diagnostics
 # ============================================================ #
 diagnostic_per_model = {
     "iel"      : {
+        "AWI-CM-1-1-MR": ["iel_025deg_dis"],
+        "CanESM5"      : ["iel_1deg_bil"],
+        "CanESM5-CanOE": ["iel_1deg_bil"],
+        "CESM2"        : ["iel_05deg_bil"],
         "CESM2-FV2"    : [f"iel_{x}deg_bil" for x in ["1", "05", "025", "2", "4"]],
-        "IPSL-CM6A-LR" : [f"iel_{x}deg_bil" for x in ["1", "05", "025", "2", "4"]]
+        "CESM2-WACCM"  : ["iel_05deg_bil"],
+        "CNRM-CM6-1"   : ["iel_1deg_bil"],
+        "CNRM-CM6-1-HR": ["iel_025deg_bil"],
+        "CNRM-ESM2-1"  : ["iel_1deg_bil"],
+        "GFDL-ESM4"    : ["iel_05deg_bil"],
+        "IPSL-CM6A-LR" : [f"iel_{x}deg_bil" for x in ["1", "05", "025", "2", "4"]],
+        "MIROC6"       : ["iel_1deg_bil"],
+        "MPI-ESM1-2-HR": ["iel_05deg_bil"],
+        "MPI-ESM1-2-LR": ["iel_1deg_bil"],
+        "MRI-ESM2-0"   : ["iel_05deg_bil"],
+        "NorESM2-LM"   : ["iel_1deg_bil"],
+        "NorESM2-MM"   : ["iel_1deg_bil"],
+        "UKESM1-0-LL"  : ["iel_1deg_bil"],
+        "UKESM1-1-LL"  : ["iel_1deg_bil"]
     },
     "oht"      : {
+        "AWI-CM-1-1-MR": ["oht_residual_pot"],
+        "CanESM5"      : ["oht_residual_pot", "oht_from_hfbasin"],
         "CanESM5-CanOE": ["oht_residual_pot", "oht_from_hfbasin"],
+        "CESM2"        : ["oht_residual_pot"],
         "CESM2-FV2"    : ["oht_residual_pot"],
+        "CESM2-WACCM"  : ["oht_residual_pot"],
+        "CNRM-CM6-1"   : ["oht_from_hfx_hfy", "oht_from_hfbasin"],
+        "CNRM-CM6-1-HR": ["oht_from_hfx_hfy", "oht_from_hfbasin"],
         "CNRM-ESM2-1"  : ["oht_from_hfx_hfy", "oht_from_hfbasin"],
-        "IPSL-CM6A-LR" : ["oht_residual_con", "oht_from_hfbasin", "oht_from_hfx_hfy"]
+        "GFDL-ESM4"    : ["oht_from_hfbasin"],
+        "GISS-E2-2-G"  : ["oht_from_hfbasin"],
+        "IPSL-CM6A-LR" : ["oht_residual_con", "oht_from_hfx_hfy", "oht_from_hfbasin"],
+        "MIROC6"       : ["oht_from_hfbasin", "oht_residual_pot"],
+        "MPI-ESM1-2-HR": ["oht_residual_pot", "oht_from_hfbasin", "oht_from_hfx_hfy"],
+        "MPI-ESM1-2-LR": ["oht_residual_pot", "oht_from_hfbasin", "oht_from_hfx_hfy"],
+        "MRI-ESM2-0"   : ["oht_from_hfbasin", "oht_from_hfx_hfy"],
+        "NorESM2-LM"   : ["oht_from_hfbasin", "oht_from_hfx_hfy"],
+        "NorESM2-MM"   : ["oht_from_hfbasin", "oht_from_hfx_hfy"],
+        "UKESM1-0-LL"  : ["oht_from_hfx_hfy", "oht_from_hfbasin"],
+        "UKESM1-1-LL"  : ["oht_from_hfbasin"]
     },
     "dhdt"    : {
-        "CanESM5-CanOE": ["dhdt_pot_direct", "dhdt_pot_residual_hfbasin"],
-        "CESM2-FV2"    : ["dhdt_pot_direct", "dhdt_pot_residual_hfbasin"],
-        "CNRM-ESM2-1"  : ["dhdt_pot_residual_hfx", "dhdt_pot_residual_hfbasin"],
-        "IPSL-CM6A-LR" : ["dhdt_con_direct", "dhdt_con_residual_hfbasin", "dhdt_con_residual_hfx"]
+        "AWI-CM-1-1-MR": ["dhdt_pot_direct_cc"],
+        "CanESM5"      : ["dhdt_pot_direct_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "CanESM5-CanOE": ["dhdt_pot_direct_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "CESM2"        : ["dhdt_pot_direct_cc"],
+        "CESM2-FV2"    : ["dhdt_pot_direct_cc"],
+        "CESM2-WACCM"  : ["dhdt_pot_direct_cc"],
+        "CNRM-CM6-1"   : ["dhdt_pot_residual_hfx_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "CNRM-CM6-1-HR": ["dhdt_pot_residual_hfx_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "CNRM-ESM2-1"  : ["dhdt_pot_residual_hfx_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "GFDL-ESM4"    : ["dhdt_pot_residual_hfbasin_cc"],
+        "GISS-E2-2-G"  : ["dhdt_pot_residual_hfbasin_gn", "dhdt_pot_residual_hfbasin_cc"],
+        "IPSL-CM6A-LR" : ["dhdt_con_direct_cc", "dhdt_con_residual_hfx_cc", "dhdt_con_residual_hfbasin_cc"],
+        "MIROC6"       : ["dhdt_pot_residual_hfbasin_cc", "dhdt_pot_direct_cc"],
+        "MPI-ESM1-2-HR": ["dhdt_pot_direct_cc", "dhdt_pot_residual_hfbasin_cc", "dhdt_pot_residual_hfx_cc"],
+        "MPI-ESM1-2-LR": ["dhdt_pot_direct_cc", "dhdt_pot_residual_hfbasin_cc", "dhdt_pot_residual_hfx_cc"],
+        "MRI-ESM2-0"   : ["dhdt_pot_residual_hfbasin_cc", "dhdt_pot_residual_hfx_cc"],
+        "NorESM2-LM"   : ["dhdt_pot_residual_hfbasin_cc", "dhdt_pot_residual_hfx_cc"],
+        "NorESM2-MM"   : ["dhdt_pot_residual_hfbasin_cc", "dhdt_pot_residual_hfx_cc"],
+        "UKESM1-0-LL"  : ["dhdt_pot_residual_hfx_cc", "dhdt_pot_residual_hfbasin_cc"],
+        "UKESM1-1-LL"  : ["dhdt_pot_residual_hfbasin_cc"]
     },
     "aht"      : dict.fromkeys(md.defined_models, ["aht_from_net_flux_gn_interp"]),
     "f_down"   : dict.fromkeys(md.defined_models, ["f_down_gn_interp"]),
@@ -79,14 +128,17 @@ diagnostic_per_model = {
     "f_sw_surf": dict.fromkeys(md.defined_models, ["f_sw_surf_gn_interp"]),
     "f_sw_toa" : dict.fromkeys(md.defined_models, ["f_sw_toa_gn_interp"]),
     "f_up"     : dict.fromkeys(md.defined_models, ["f_up_gn_interp"]),
-    "hfds"     : dict.fromkeys(md.defined_models, ["hfds"]),
-    "hfds_wm-2": dict.fromkeys(md.defined_models, ["hfds_wm-2"]),
+    "hfds"     : dict.fromkeys(md.defined_models, ["hfds_cc"]),
+    "hfds_wm-2": dict.fromkeys(md.defined_models, ["hfds_cc_wm-2"]),
     "sia"      : dict.fromkeys(md.defined_models, ["sia"]),
     "sia_mon"  : dict.fromkeys(md.defined_models, ["sia_mon"]),
     "sie"      : dict.fromkeys(md.defined_models, ["sie"]),
     "sie_mon"  : dict.fromkeys(md.defined_models, ["sie_mon"]),
     "tas"      : dict.fromkeys(md.defined_models, ["tas_gn_interp"])
 }
+
+diagnostic_per_model["hfds"]["GISS-E2-2-G"] = ["hfds_gn_interp", "hfds_cc", "hfds_gn"]
+diagnostic_per_model["hfds_wm-2"]["GISS-E2-2-G"] = ["hfds_gn_interp_wm-2", "hfds_cc_wm-2", "hfds_gn_wm-2"]
 
 diagnostic_per_model["dhdt_wm-2"] = {}
 for model in diagnostic_per_model["dhdt"].keys():

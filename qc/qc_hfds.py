@@ -13,7 +13,8 @@ def main():
         "model_id": cmd.model,
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
-        "lat_eval": cmd.latitude
+        "lat_eval": cmd.latitude,
+        "select_diag": cmd.seldiag
     }
     
     data_paths = ["", ""]
@@ -29,8 +30,10 @@ def main():
     e, ens_label = qc.ens_member_label(cmd.ensmemberid,
                                        r_vals, ripf)
     
-    full_diag_names = [mdiags.get_diagnostic_from_alias(x)
-                       for x in ["hfds", "hfds_wm-2"]]
+    full_diag_names = [
+        mdiags.get_diagnostic_from_keyword(x, cmd.model,
+                                           cmd.seldiag)
+       for x in ["hfds", "hfds_wm-2"]]
     
     # ------------------------------------------------------- #
     

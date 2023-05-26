@@ -100,15 +100,22 @@ for method, method_alias_part in zip(
 
 # Ocean diagnostics       #
 # ----------------------- #
-_define_diagnostic("hfds", "hfds",
-    diag_name="hfds", time_methods="yearly",
-    space_methods="area_integral",
-    other_methods="cell_center_approx")
+for method, method_alias_part in zip(
+        ["native", "native_interp", "cell_center_approx"],
+        ["gn", "gn_interp", "cc"]):
+    
+    # Most hfds diagnostics are "cc", but a couple have regular
+    # ocean grids (independent lon/lat) so can have exact
+    # calculations
+    
+    _define_diagnostic("hfds", f"hfds_{method_alias_part}",
+        diag_name="hfds", time_methods="yearly",
+        space_methods="area_integral", other_methods=method)
 
-_define_diagnostic("hfds_wm-2", "hfds_wm-2",
-    diag_name="hfds", time_methods="yearly",
-    space_methods="area_mean",
-    other_methods="cell_center_approx")
+    _define_diagnostic("hfds_wm-2",
+        f"hfds_{method_alias_part}_wm-2",
+        diag_name="hfds", time_methods="yearly",
+        space_methods="area_mean", other_methods=method)
 
 _define_diagnostic("oht", "oht_from_hfbasin",
     diag_name="oht_from_hfbasin", nc_var_name="oht",
@@ -131,43 +138,57 @@ _define_diagnostic("oht", "oht_from_hfx_hfy",
     time_methods="yearly", other_methods="cell_center_approx")
 
 for x in ["pot", "con"]:
-    _define_diagnostic("dhdt", f"dhdt_{x}_direct",
+    _define_diagnostic("dhdt", f"dhdt_{x}_direct_cc",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral,
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_integral",
         other_methods="cell_center_approx")
     
-    _define_diagnostic("dhdt", f"dhdt_{x}_residual_hfx",
+    _define_diagnostic("dhdt", f"dhdt_{x}_residual_hfx_cc",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfx_hfy",
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_integral",
         other_methods="cell_center_approx")
     
-    _define_diagnostic("dhdt", f"dhdt_{x}_residual_hfbasin",
+    _define_diagnostic("dhdt", f"dhdt_{x}_residual_hfbasin_cc",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfbasin",
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_integral",
         other_methods="cell_center_approx")
     
     # Same as above 3, but area mean (wm-2) versions:
-    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_direct_wm-2",
+    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_direct_cc_wm-2",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral,
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_mean",
         other_methods="cell_center_approx")
     
-    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_residual_hfx_wm-2",
+    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_residual_hfx_cc_wm-2",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfx_hfy",
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_mean",
         other_methods="cell_center_approx")
     
-    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_residual_hfbasin_wm-2",
+    _define_diagnostic("dhdt_wm-2", f"dhdt_{x}_residual_hfbasin_cc_wm-2",
         diag_name=f"o{x}temptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfbasin",
         nc_var_name=f"o{x}temptend" + nf.nc_var_nq_vertical_integral,
         time_methods="yearly", space_methods="area_mean",
         other_methods="cell_center_approx")
-    
+
+
+# For models that have regular lon/lat ocean grids
+# (currently GISS-E2-2-G)
+_define_diagnostic("dhdt", "dhdt_pot_residual_hfbasin_gn",
+    diag_name="opottemptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfbasin",
+    nc_var_name="opottemptend" + nf.nc_var_nq_vertical_integral,
+    time_methods="yearly", space_methods="area_integral",
+    other_methods="native_interp")
+
+_define_diagnostic("dhdt_wm-2", "dhdt_pot_residual_hfbasin_gn_wm-2",
+    diag_name="opottemptend" + nf.diag_nq_vertical_integral + "_from_hfds_hfbasin",
+    nc_var_name="opottemptend" + nf.nc_var_nq_vertical_integral,
+    time_methods="yearly", space_methods="area_mean",
+    other_methods="native_interp")
 
 
 # Sea ice diagnostics     #
