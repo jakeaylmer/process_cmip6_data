@@ -58,16 +58,16 @@ def main():
     # Load from aliases (defined in api._diagnostic_definitions)
     dhdt_resid_hfbasin_n, dhdt_resid_hfbasin_s, year, r_vals, \
         ripf, lat_eval_n, lat_eval_s, data_path_resid_hfbasin \
-        = qc.get_data(f"dhdt_{ftype}_residual_hfbasin{units}",
+        = qc.get_data(f"dhdt_{ftype}_residual_hfbasin_cc{units}",
                       **gd_kw)
     
     dhdt_resid_hfx_n, dhdt_resid_hfx_s, _, _, _, _, _, \
         data_path_resid_hfx = qc.get_data(
-            f"dhdt_{ftype}_residual_hfx{units}", **gd_kw)
+            f"dhdt_{ftype}_residual_hfx_cc{units}", **gd_kw)
     
     dhdt_direct_n, dhdt_direct_s, _, _, _, _, _, \
         data_path_direct = qc.get_data(
-            f"dhdt_{ftype}_direct{units}", **gd_kw)
+            f"dhdt_{ftype}_direct_cc{units}", **gd_kw)
     
     data_paths = qc.shorten_data_path_labels(
         [data_path_resid_hfbasin, data_path_resid_hfx,
