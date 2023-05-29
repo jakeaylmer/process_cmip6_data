@@ -1,4 +1,4 @@
-from src import (
+from process_cmip6_data.src import (
     diagnostics as diags,
     load_processed_data as lpd,
     metadata as md,

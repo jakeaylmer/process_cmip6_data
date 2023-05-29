@@ -1,7 +1,7 @@
-from api import model_diagnostics as mdiags
-from src import netcdf as nf
-from src import qc
-from src import script_tools
+from process_cmip6_data.api import model_diagnostics as mdiags
+from process_cmip6_data.src import netcdf as nf
+from process_cmip6_data.src import qc
+from process_cmip6_data.src import script_tools
 
 
 

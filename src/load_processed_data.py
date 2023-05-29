@@ -8,11 +8,12 @@ fraction, etc).
 from pathlib import Path
 import numpy as np
 
-from src.load_raw_data import _load_coordinate_arrays
-from src import metadata as md
-from src.netcdf import (nc_lon_2d_name, nc_lat_2d_name,
-    nc_ref_lat_n_name, nc_ref_lat_s_name,
-    nc_ref_lat_single_name, nc_ripf_labels, nc_file_path)
+from .load_raw_data import _load_coordinate_arrays
+from . import metadata as md
+from .netcdf import (nc_lon_2d_name, nc_lat_2d_name,
+                     nc_ref_lat_n_name, nc_ref_lat_s_name,
+                     nc_ref_lat_single_name, nc_ripf_labels,
+                     nc_file_path)
 
 from ice_edge_latitude.utilities import regions as iel_regions
 from my_python_utilities.data_tools import nc_tools as nct

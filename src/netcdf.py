@@ -6,7 +6,7 @@ from pathlib import Path
 from netCDF4 import Dataset, date2num
 import numpy as np
 
-from src import metadata as md
+from . import metadata as md
 
 
 def nc_save_dir(diagnostic_id, experiment_id, model_id):

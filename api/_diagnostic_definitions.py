@@ -2,8 +2,8 @@
 model_diagnostics module for explanation.
 """
 
-from src import metadata as md
-from src import netcdf as nf
+from ..src import metadata as md
+from ..src import netcdf as nf
 
 from tabulate import tabulate
 

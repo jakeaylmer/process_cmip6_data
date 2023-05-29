@@ -9,9 +9,9 @@ from netCDF4 import num2date
 import numpy as np
 import matplotlib.pyplot as plt
 
-from api import load_data
-from src.metadata import dir_out_nc_data, members, year_range
-from src.netcdf import nc_time_units, nc_calendar
+from ..api import load_data
+from .metadata import dir_out_nc_data, members, year_range
+from .netcdf import nc_time_units, nc_calendar
 
 from my_python_utilities.data_tools.nc_tools import ncdump
 

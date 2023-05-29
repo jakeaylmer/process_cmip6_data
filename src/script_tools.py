@@ -4,7 +4,7 @@ using argparse.
 
 from argparse import ArgumentParser
 
-from src import metadata as md
+from . import metadata as md
 
 
 def default_cmd_argument_parser(**kwargs):

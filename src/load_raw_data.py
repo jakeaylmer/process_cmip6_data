@@ -6,7 +6,7 @@ lakes, ensuring units are fraction, etc).
 from pathlib import Path
 import numpy as np
 
-from src import metadata as md
+from . import metadata as md
 
 from my_python_utilities.data_tools import nc_tools as nct
 from ice_edge_latitude.utilities import regions as iel_regions

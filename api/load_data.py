@@ -4,8 +4,8 @@ from datetime import datetime as dt
 from netCDF4 import num2date
 import numpy as np
 
-from api import model_diagnostics as mdiags
-from src.netcdf import (nc_file_path, nc_ripf_labels,
+from . import model_diagnostics as mdiags
+from ..src.netcdf import (nc_file_path, nc_ripf_labels,
                         nc_time_name)
 
 from my_python_utilities.data_tools.datetime_tools import (

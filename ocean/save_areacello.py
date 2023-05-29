@@ -1,6 +1,6 @@
 import numpy as np
 
-from src import (
+from process_cmip6_data.src import (
     load_raw_data as lrd,
     metadata as md,
     netcdf as nf,

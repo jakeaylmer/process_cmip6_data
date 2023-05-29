@@ -29,8 +29,8 @@ available for HadGEM3-GC31-LL.
 
 """
 
-from api import _diagnostic_definitions as ddef
-from src import metadata as md
+from . import _diagnostic_definitions as ddef
+from ..src import metadata as md
 
 
 print_defined_diagnostics = ddef.print_defined_diagnostics

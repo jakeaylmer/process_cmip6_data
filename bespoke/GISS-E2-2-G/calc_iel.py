@@ -1,10 +1,10 @@
 from pathlib import Path
 import numpy as np
 
-from src.diagnostics import (
+from process_cmip6_data.src.diagnostics import (
     year_mean_time_series_multi_member as ymtsmm)
 
-from src import (
+from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
