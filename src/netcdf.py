@@ -80,7 +80,8 @@ nc_time_units = {
     "ssp126"    : "days since 1850-01-01",
     "ssp245"    : "days since 1850-01-01",
     "ssp370"    : "days since 1850-01-01",
-    "ssp585"    : "days since 1850-01-01"
+    "ssp585"    : "days since 1850-01-01",
+    "reanalysis": "days since 1850-01-01"
 }
 
 nc_calendar = {
@@ -89,7 +90,8 @@ nc_calendar = {
     "ssp126"    : "standard",
     "ssp245"    : "standard",
     "ssp370"    : "standard",
-    "ssp585"    : "standard"
+    "ssp585"    : "standard",
+    "reanalysis": "standard"
 }
 
 
@@ -693,6 +695,8 @@ def prepare_to_save(save_dir_in=None, file_name_in=None,
         file_name_out = nc_file_name(diagnostic_id,
                                      experiment_id,
                                      model_id)
+    else:
+        file_name_out = file_name_in
     
     return save_dir_out, file_name_out
 

@@ -513,3 +513,95 @@ ocn_prognostic_temperature = {
 # (it doesn't matter because the quantity is heat content,
 # not temperature, anyway):
 ocn_prognostic_temperature_when_does_not_exist = "pot"
+
+
+# ========================================================== #
+# REANALYSES METADATA
+# ========================================================== #
+
+dir_raw_nc_data_reanalyses = Path("/storage", "basic", "cpom",
+    "gb919150", "monthly_near_surface_air_temperature")
+
+dir_out_nc_data_reanalyses = Path("/storage", "silver", "cpom",
+                                  "gb919150", "phd",
+                                  "reanalyses")
+
+reanalyses_long_names = {
+    "CFSR"   : "Climate Forecast System Reanalysis (CFSR)",
+    "CFSv2"  : "Climate Forecast System Reanalysis Version "
+               + "2 (CFSv2)",
+    "ERA5"   : "European Centre for Medium-Range Weather "
+               + "Forecasts (ECMWF) Reanalysis v5 (ERA5)",
+    "JRA-55" : "Japanese 55-year Reanalysis (JRA-55)",
+    "MERRA-2": "Modern-Era Retrospective analysis for "
+               + "Research and Applications, Version 2 "
+               + "(MERRA-2)"
+}
+
+defined_reanalyses = list(reanalyses_long_names.keys())
+default_reanalysis = defined_reanalyses[0]
+
+reanalyses_references = {
+    "CFSR"   : "Saha, S. et al., 2010: The NCEP Climate "
+               + "Forecast System Reanalysis, Bull. Am. "
+               + "Meteorol. Soc., 91(8), 1015-1058, "
+               + "https://doi.org/10.1175/2010BAMS3001.1",
+    "CFSv2"  : "Saha, S. et al., 2014: The NCEP Climate "
+               + "Forecast System Version 2, J. Clim., 27(6), "
+               + "2185-2208, "
+               + "https://doi.org/10.1175/JCLI-D-12-00823.1",
+    "ERA5"   : "Hersbach, H. et al., 2020: The ERA5 global "
+               + "reanalysis, Q. J. R. Meteorol. Soc., "
+               + "146(730), 1999-2049, "
+               + "https://doi.org/10.1002/qj.3803",
+    "JRA-55" : "Kobayashi, S. et al., 2015: The JRA-55 "
+               + "Reanalysis: General Specifications and Basic "
+               + "Characteristics, J. Meteorol. Soc. Japan, "
+               + "93(1), 5-48, "
+               + "https://doi.org/10.2151/jmsj.2015-001",
+    "MERRA-2": "Gelaro, R. et al., 2017: The Modern-Era "
+               + "Retrospective Analysis for Research and "
+               + "Applications, Version 2 (MERRA-2), J. Clim., "
+               + "30(14), 5419-5454, "
+               + "https://doi.org/10.1175/JCLI-D-16-0758.1"
+}
+
+reanalyses_nc_file_fmt = {"tas": "t2.global.monthly.{}.nc"}
+
+reanalyses_year_range = {
+    "CFSR"      : (1979, 2010),
+    "CFSv2"     : (2011, 2023),
+    "ERA5"      : (1979, 2023),
+    "JRA-55"    : (1958, 2023),
+    "MERRA-2"   : (1980, 2023)
+}
+
+reanalyses_grid_dims_atm = {
+    "CFSR"      : (576, 1152),
+    "CFSv2"     : (880, 1760),
+    "ERA5"      : (720, 1440),
+    "JRA-55"    : (320, 640),
+    "MERRA-2"   : (361, 576)
+}
+
+# For ERA5, these are the names after remapping with CDO (see
+# shell script for why that is done); in the raw data they are
+# "longitude" and "latitude":
+reanalyses_nc_coord_names = {
+    "CFSR"   : ["lon", "lat"],
+    "CFSv2"  : ["lon", "lat"],
+    "ERA5"   : ["lon", "lat"],
+    "JRA-55" : ["g4_lon_2", "g4_lat_1"],
+    "MERRA-2": ["lon", "lat"]
+}
+
+# Variable names are not standardised across reanalyses:
+reanalyses_nc_names = {
+    "tas": {
+        "CFSR"   : "TMP_L103_Avg",
+        "CFSv2"  : "TMP_L103_Avg",
+        "ERA5"   : "t2m",
+        "JRA-55" : "TMP_GDS4_HTGL_S113",
+        "MERRA-2": "T2M"
+    }
+}

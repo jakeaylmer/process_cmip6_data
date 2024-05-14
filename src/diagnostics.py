@@ -30,6 +30,58 @@ def estimate_lon_lat_bnds_1D(lon, lat):
     return lon_bnds, lat_bnds
 
 
+
+def grid_cell_area(lon_bnds, lat_bnds,
+        earth_radius=6.371E6):
+    """
+    Generate a grid-cell area array (areacell) for a fixed
+    (independent latitude/longitude axes), global grid of
+    specified longitude and latitude cell bounds.
+    
+    
+    Parameters
+    ----------
+    lon_bnds : array (nx, 2)
+        Longitude corners (bounds) in degrees east.
+    
+    lat_bnds : array (ny, 2)
+        Latitude corners (bounds) in degrees north.
+    
+    
+    Optional parameters
+    -------------------
+    earth_radius : float, default = 6.371E6
+        Mean Earth radius in meters.
+    
+    
+    Returns
+    -------
+    cell_areas : array (ny, nx)
+        Grid cell areas in meters squared.
+    
+    """
+    
+    # Get coordinates in radians for calculation of areas:
+    lon_bnds_r = np.pi*lon_bnds/180.0
+    lat_bnds_r = np.pi*lat_bnds/180.0
+    
+    # The area of the grid cell between longitudes lon_1 and
+    # lon_2 and latitudes lat_1 and lat_2 is given by
+    # integrating the area element in spherical coordinates:
+    # 
+    #     dA(lat,lon) = (R**2)*cos(lat)*dlat*dlon
+    # 
+    #  => A(lat,lon) = (R**2)*(lon_2-lon_1)*[sin(lat_2)-sin(lat_1)]
+    # 
+    dlon = abs(lon_bnds_r[:,1] - lon_bnds_r[:,0])
+    
+    dsinlat = abs(
+        np.sin(lat_bnds_r[:,1]) - np.sin(lat_bnds_r[:,0]))
+    
+    return (earth_radius**2)*dlon[npna,:]*dsinlat[:,npna]
+
+
+
 # ============================================================ #
 # TIME AVERAGING
 # ============================================================ #
