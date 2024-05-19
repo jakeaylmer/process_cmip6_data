@@ -12,8 +12,7 @@ import matplotlib.pyplot as plt
 from ..api import load_data
 from .metadata import dir_out_nc_data, members, year_range
 from .netcdf import nc_time_units, nc_calendar
-
-from my_python_utilities.data_tools.nc_tools import ncdump
+from .utils import ncdump
 
 global _ncdump_count
 _ncdump_count = 0

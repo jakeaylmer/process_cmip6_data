@@ -7,15 +7,15 @@ from pathlib import Path
 import numpy as np
 
 from . import metadata as md
+from . import utils
 
-from my_python_utilities.data_tools import nc_tools as nct
 from ice_edge_latitude.utilities import regions as iel_regions
 
 
 def _load_coordinate_arrays(nc_file, nc_coord_names):
     """Generic function to load coordinate arrays from
-    one netCDF file using nct.get_arrays() routine."""
-    return nct.get_arrays([nc_file], nc_coord_names, [])
+    one netCDF file using utils.nc_get_arrays() routine."""
+    return utils.nc_get_arrays([nc_file], nc_coord_names, [])
 
 
 
@@ -93,8 +93,8 @@ def field_2D(variable_id,
     else:
         coords = md.lonlat_atm_nc_names[model_id]
     
-    lon, lat, fld = nct.get_arrays(data_files_in, coords,
-                                   [variable_id])
+    lon, lat, fld = utils.nc_get_arrays(data_files_in, coords,
+                                        [variable_id])
     
     if original_miss_value != set_miss_value:
         fld = np.where(fld >= original_miss_value,
@@ -140,8 +140,8 @@ def field_3D(variable_id,
     else:
         coords = md.lonlat_atm_nc_names[model_id]
     
-    lon, lat, fld = nct.get_arrays(data_files_in, coords,
-                                   [variable_id])
+    lon, lat, fld = utils.nc_get_arrays(data_files_in, coords,
+                                        [variable_id])
     
     if original_miss_value != set_miss_value:
         fld = np.where(fld >= original_miss_value,

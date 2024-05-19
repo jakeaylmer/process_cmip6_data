@@ -1,14 +1,13 @@
 from pathlib import Path
 import numpy as np
 
-from my_python_utilities.data_tools import nc_tools as nct
-
 from process_cmip6_data.src import (
     diagnostics as diags,
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
+    script_tools,
+    utils
 )
 
 diag_name = "oht_from_hfbasin"
@@ -43,7 +42,7 @@ def process_member(member_id, model_id, experiment_id):
         f'hfbasin*{model_id}*{experiment_id}*{member_id}*.nc')
     ])
     
-    lat, hfbasin = nct.get_arrays(data_files_in,
+    lat, hfbasin = utils.nc_get_arrays(data_files_in,
         [md.hfbasin_metadata[model_id][1]], ['hfbasin'])
     
     lat = np.squeeze(lat)

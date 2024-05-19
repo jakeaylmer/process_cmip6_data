@@ -7,11 +7,7 @@ import numpy as np
 from . import model_diagnostics as mdiags
 from ..src.netcdf import (nc_file_path, nc_ripf_labels,
                         nc_time_name)
-
-from my_python_utilities.data_tools.datetime_tools import (
-    cftime_to_datetime)
-from my_python_utilities.data_tools.nc_tools import (
-    get_arrays, get_nc_time_units)
+from ..src import utils
 
 
 def _get_j_t_data(data):
@@ -110,24 +106,23 @@ def _load_diag_data(data_path, coord_names, var_names,
     
     """
     
-    t_units, calendar = get_nc_time_units(data_path)
+    t_units, calendar = utils.nc_get_time_units(data_path)
     
     # Load data arrays, including the ensemble member id numbers
     # (r, i, p, f), then coordinate variables (if applicable)
     # and then time and the actual variable names of diagnostic
     # d. Keep these altogther in a list (mutable):
-    data = list(get_arrays([data_path], id_names + coord_names,
-                [nc_time_name] + var_names))
+    data = list(utils.nc_get_arrays([data_path],
+        id_names + coord_names, [nc_time_name] + var_names))
     
     # Do not use function for this (we are manipulating
     # the data construct here -- that function is for the "final
     # form" version after such manipulation):
     j_t_data = len(id_names) + len(coord_names)
     
-    data[j_t_data] = cftime_to_datetime(
+    data[j_t_data] = utils.cftime_to_datetime(
         num2date(data[j_t_data], units=t_units,
-                 calendar=calendar)
-    )
+                 calendar=calendar))
     
     # Latitude evaluation:
     if len(coord_names) == 2 and lat_eval is not None:

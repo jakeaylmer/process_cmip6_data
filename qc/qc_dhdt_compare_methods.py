@@ -5,8 +5,6 @@ from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
 
-from my_python_utilities.data_tools import nc_tools as nct
-
 
 def main():
     

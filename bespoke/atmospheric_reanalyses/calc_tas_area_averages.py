@@ -7,10 +7,9 @@ from process_cmip6_data.src import (
     load_raw_data as lrd,
     metadata as md,
     netcdf as nf,
-    script_tools
+    script_tools,
+    utils
 )
-
-from my_python_utilities.data_tools import nc_tools as nct
 
 # Basic diagnostic name (details such as time averaging, zonal
 # mean, etc., and the corresponding netCDF variable name, are
@@ -84,7 +83,7 @@ def main():
                    nf.nc_file_name(diag_name_load, "reanalysis",
                                    cmd.reanalysis))
     
-    tas, = nct.get_arrays([nc_file], [],
+    tas, = utils.nc_get_arrays([nc_file], [],
         [nf.nc_var_name(name="tas",
                         time_methods=nf.nc_var_nq_yearly)])
     

@@ -9,10 +9,9 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
+    script_tools,
+    utils
 )
-
-from my_python_utilities.data_tools import nc_tools as nct
 
 # Basic diagnostic name (details such as time averaging,
 # zonal mean, etc., and the corresponding nf variable
@@ -198,17 +197,12 @@ def main():
              md.reanalysis_nc_file_fmt["tas"].format(y))
         for y in range(yr_s, yr_e+1, 1)
     ]
-    # (2) Load data using netcdf_tools.py from external
-    #     my_python_utilities package (this is also how the
-    #     local src load_raw_data.py and load_processed_data.py
-    #     modules work).
-    # 
-    #     Need to also load latitude to check if the
+    # (2) Load data. Need to also load latitude to check if the
     #     corresponding dimension needs to be reversed. This
     #     will already have been checked and corrected in the
     #     version of latitude loaded for areacella.
     print("Loading raw data...")
-    lat_raw, tas = nct.get_arrays(nc_files,
+    lat_raw, tas = utils.nc_get_arrays(nc_files,
         [md.reanalysis_nc_coord_names[cmd.reanalysis][1]],
         [md.reanalysis_nc_names["tas"][cmd.reanalysis]])
     

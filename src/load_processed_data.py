@@ -14,9 +14,9 @@ from .netcdf import (nc_lon_2d_name, nc_lat_2d_name,
                      nc_ref_lat_n_name, nc_ref_lat_s_name,
                      nc_ref_lat_single_name, nc_ripf_labels,
                      nc_file_path)
+from . import utils
 
 from ice_edge_latitude.utilities import regions as iel_regions
-from my_python_utilities.data_tools import nc_tools as nct
 
 
 def areacello(model_id):
@@ -102,8 +102,8 @@ def time_series_single_ref_lat(diagnostic_id, nc_field_name,
     nc_ripf = [nc_ripf_labels[x] for x in "ripf"]
     
     ref_lat, r_vals, i_vals, p_vals, f_vals, data = \
-        nct.get_arrays([data_file], nc_coords + nc_ripf,
-            [nc_field_name])
+        utils.nc_get_arrays([data_file], nc_coords + nc_ripf,
+                            [nc_field_name])
     
     return ref_lat, r_vals, i_vals, p_vals, f_vals, data
 
@@ -150,7 +150,7 @@ def time_series_ref_lats(diagnostic_id, nc_field_name_n,
     nc_ripf = [nc_ripf_labels[x] for x in "ripf"]
     
     ref_lat_n, ref_lat_s, r_vals, i_vals, p_vals, f_vals, \
-        data_n, data_s = nct.get_arrays([data_file],
+        data_n, data_s = utils.nc_get_arrays([data_file],
             nc_coords + nc_ripf,
             [nc_field_name_n, nc_field_name_s])
     
@@ -199,8 +199,8 @@ def field_2D(diagnostic_id, nc_field_name, model_id,
     nc_ripf = [nc_ripf_labels[x] for x in "ripf"]
     
     lon, lat, r_vals, i_vals, p_vals, f_vals, field = \
-        nct.get_arrays([data_file], nc_coords + nc_ripf,
-                       [nc_field_name])
+        utils.nc_get_arrays([data_file], nc_coords + nc_ripf,
+                            [nc_field_name])
     
     return lon, lat, r_vals, i_vals, p_vals, f_vals, field
 
@@ -261,8 +261,9 @@ def prepare_siconc_remapped(
     # lon/lat names with "lon" and "lat"?
     coords = ["lon", "lat"]
     
-    lon, lat, siconc = nct.get_arrays(data_files_in, coords,
-                                      [variable_id])
+    lon, lat, siconc = utils.nc_get_arrays(data_files_in,
+                                           coords,
+                                           [variable_id])
     
     if original_miss_value != set_miss_value:
         siconc = np.where(siconc >= original_miss_value,

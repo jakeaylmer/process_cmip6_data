@@ -49,7 +49,7 @@ activity = {
 dir_raw_nc_data = Path("/storage", "basic", "cpom", "gb919150",
                        "CMIP6")
 dir_out_nc_data = Path("/storage", "silver", "cpom", "gb919150",
-                       "cmip6_test")
+                       "phd", "cmip6_processed_data")
 
 # =========================================================== #
 

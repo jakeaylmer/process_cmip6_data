@@ -8,13 +8,12 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
+    script_tools,
+    utils
 )
 
 from ice_edge_latitude.diagnostics import ice_edge_latitude as iel
 from ice_edge_latitude.utilities import regions as iel_regions
-
-from my_python_utilities.data_tools import nc_tools as nct
 
 # Basic diagnostic names (details such as time averaging, zonal
 # mean, etc., and the corresponding nf variable name, are
@@ -106,7 +105,8 @@ def main():
                 )
             ])
         
-        siconc_m, = nct.get_arrays(data_files_in,[],["siconca"])
+        siconc_m, = utils.nc_get_arrays(data_files_in, [],
+                                        ["siconca"])
         
         siconc_m = np.where(
             siconc_m >= md.default_original_missing_value,
