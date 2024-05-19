@@ -6,8 +6,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 diag_name   = "hfds"
 nc_var_name = "hfds"
@@ -21,6 +20,9 @@ nc_var_attrs = {
     "units"        : nf.field_units["heatflux"]
 }
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "heat flux into ocean surface"
 
 def main():
     
@@ -74,7 +76,8 @@ def main():
         "latitude": lat,
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
-        "nc_global_attrs": {"external_variables": "areacella"}
+        "nc_global_attrs": {"external_variables": "areacella"},
+        "nc_title_str": nc_title_str
     }
     
     diag_name_kw = {"name": diag_name,

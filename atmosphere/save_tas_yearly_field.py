@@ -6,20 +6,21 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
-# Basic diagnostic name (details such as time averaging,
-# zonal mean, etc., and the corresponding nf variable
-# name, are added automatically as specified in the nf
-# module):
+# Basic diagnostic name (details such as time averaging, zonal
+# mean, etc., and the corresponding netCDF variable name, are
+# added automatically as specified in the nf module):
 diag_name = "tas"
+
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "near-surface air temperature"
 
 nc_var_attrs = {
     "cell_measures": "area: areacella",
     "cell_methods" : f"area: mean {nf.nc_time_name}: mean",
-    "long_name"    : "Near-surface air temperature, annually "
-                     + "averaged",
+    "long_name"    : "Near-surface air temperature, annually averaged",
     "standard_name": "air_temperature",
     "units"        : nf.field_units["temperature"]
 }
@@ -64,7 +65,9 @@ def main():
         if all(tas[~np.isnan(tas)] > 100.0):
             # Safe bet (!) that we are in K
             tas = md.K_to_degree_C(tas)
-            tas = md.K_to_degree_C(tas)
+    
+    # Why are the above conversion routines in metadata module?
+    # Shouldn't they be in diagnostics? Possibly to move...
     
     # ------------------------------------------------------- #
     
@@ -79,7 +82,8 @@ def main():
         "latitude": lat,
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
-        "nc_global_attrs": {"external_variables": "areacella"}
+        "nc_global_attrs": {"external_variables": "areacella"},
+        "nc_title_str": nc_title_str
     }
     
     diag_kw = {
@@ -95,11 +99,10 @@ def main():
     nf.save_yearly(tas,
         nf.diag_name(**diag_kw),
         nf.nc_var_name(**nc_var_kw),
-        nc_field_type=tas.dtype, nc_field_attrs=nc_var_attrs,
-        **save_nc_kw
-    )
+        nc_field_type=tas.dtype,
+        nc_field_attrs=nc_var_attrs,
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

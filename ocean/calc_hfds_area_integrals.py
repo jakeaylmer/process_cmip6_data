@@ -38,6 +38,11 @@ nc_var_attrs_int_s["cell_methods"] = (
     f"{nf.nc_time_name}: mean {nf.nc_ref_lat_s_name}: sum "
     + "(area-weighted)")
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "heat flux into ocean surface polar-cap "
+nc_title_str_int = nc_title_str + "integrals"
+nc_title_str_mean = nc_title_str + "averages"
 
 def main():
     
@@ -118,6 +123,7 @@ def main():
             "units": nf.field_units["heatflux"],
             "long_name": nc_long_name.format("", "south"),
             **nc_var_attrs_mean_s},
+        nc_title_str=nc_title_str_mean,
         **save_nc_kw
     )
     
@@ -141,9 +147,10 @@ def main():
             "long_name": nc_long_name.format(" integrated",
                 "south", "area integral"),
             **nc_var_attrs_int_s},
+        nc_title_str=nc_title_str_int,
         **save_nc_kw
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

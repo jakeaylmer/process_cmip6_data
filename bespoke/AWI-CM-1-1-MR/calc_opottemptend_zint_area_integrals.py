@@ -42,6 +42,12 @@ nc_var_attrs_int_s["cell_methods"] = (
     + "(area-weighted)")
 
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean column heat content tendency polar-cap "
+nc_title_str_int = nc_title_str + "integrals"
+nc_title_str_mean = nc_title_str + "averages"
+
 def main():
     
     cmd = script_tools.default_cmd_args()
@@ -102,7 +108,7 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
+        "year_range"   : (yr_s, yr_e),
     }
     
     print("Saving to NetCDF...")
@@ -142,6 +148,7 @@ def main():
                                              "south"),
             "standard_name": nc_standard_name,
             **nc_var_attrs_mean_s},
+        nc_title_str=nc_title_str_mean,
         **save_nc_kw
     )
     
@@ -170,6 +177,7 @@ def main():
             "long_name": nc_long_name.format("", "south"),
             "standard_name": nc_standard_name,
             **nc_var_attrs_int_s},
+        nc_title_str=nc_title_str_int,
         **save_nc_kw
     )
 

@@ -6,8 +6,7 @@ from process_cmip6_data.src import (
     load_raw_data as lrd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Basic diagnostic names (details such as time averaging,
 # zonal mean, etc., and the corresponding netCDF variable
@@ -21,7 +20,7 @@ diag_name_fsw_toa  = "f_sw_toa"
 diag_name_fsw_surf = "f_sw_surf"
 
 # Differerent variable name for ahtc:
-var_name_ahtc     = "ahtc"
+var_name_ahtc = "ahtc"
 
 # Common attributes:
 nc_var_attrs = {
@@ -92,21 +91,18 @@ def main():
         fup[:,m,:,:] = (
             fluxes_m[flux_names.index("hfls")]
             + fluxes_m[flux_names.index("hfss")]
-            + fluxes_m[flux_names.index("rlus")]
-        )
+            + fluxes_m[flux_names.index("rlus")])
         
         fdn[:,m,:,:] = fluxes_m[flux_names.index("rlds")]
         folr[:,m,:,:] = fluxes_m[flux_names.index("rlut")]
         
         fsw_toa[:,m,:,:] = (
             fluxes_m[flux_names.index("rsdt")]
-            - fluxes_m[flux_names.index("rsut")]
-        )
+            - fluxes_m[flux_names.index("rsut")])
         
         fsw_surf[:,m,:,:] = (
             fluxes_m[flux_names.index("rsds")]
-            - fluxes_m[flux_names.index("rsus")]
-        )
+            - fluxes_m[flux_names.index("rsus")])
         
     
     # ------------------------------------------------------- #
@@ -132,20 +128,18 @@ def main():
     
     long_name = ("Atmospheric heat (moist-static energy) "
         + "transport convergence calculated from net heat "
-        + "flux into atmospheric column, annually averaged"
-    )
+        + "flux into atmospheric column, annually averaged")
     
     nf.save_yearly(ahtc,
         nf.diag_name(name=diag_name_ahtc, **diag_kw),
         nf.nc_var_name(name=var_name_ahtc, **nc_var_kw),
         nc_field_type=ahtc.dtype,
         nc_field_attrs={"long_name":long_name, **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="atmospheric heat transport convergence",
+        **save_nc_kw)
     
     long_name = ("Surface downwelling longwave radiation, "
-        + "annually averaged"
-    )
+        + "annually averaged")
     
     nf.save_yearly(fdn,
         nf.diag_name(name=diag_name_fdn, **diag_kw),
@@ -154,12 +148,11 @@ def main():
         nc_field_attrs={"long_name":long_name,
             "standard_name": "downwelling_longwave_flux_in_air",
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="surface downwelling longwave radiation",
+        **save_nc_kw)
     
     long_name = ("Top-of-atmosphere (TOA) outgoing longwave "
-        + "radiation, annually averaged"
-    )
+        + "radiation, annually averaged")
     
     nf.save_yearly(folr,
         nf.diag_name(name=diag_name_folr, **diag_kw),
@@ -168,12 +161,11 @@ def main():
         nc_field_attrs={"long_name":long_name,
             "standard_name": "toa_outgoing_longwave_flux",
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="outgoing longwave radiation",
+        **save_nc_kw)
     
     long_name = ("Surface net downward shortwave radiation, "
-        + "annually averaged"
-    )
+        + "annually averaged")
     
     nf.save_yearly(fsw_surf,
         nf.diag_name(name=diag_name_fsw_surf, **diag_kw),
@@ -182,12 +174,11 @@ def main():
         nc_field_attrs={"long_name":long_name,
             "standard_name": "surface_net_downward_shortwave_flux",
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="surface net downward shortwave radiation",
+        **save_nc_kw)
     
     long_name = ("Top-of-atmosphere (TOA) net downward shortwave "
-        + "radiation, annually averaged"
-    )
+        + "radiation, annually averaged")
     
     nf.save_yearly(fsw_toa,
         nf.diag_name(name=diag_name_fsw_toa, **diag_kw),
@@ -196,22 +187,20 @@ def main():
         nc_field_attrs={"long_name":long_name,
             "standard_name": "toa_net_downward_shortwave_flux",
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="top of atmosphere net shortwave radiation",
+        **save_nc_kw)
     
     long_name = ("Surface upwelling longwave radiation plus "
-        + "net turbulent heat flux upward, annually averaged"
-    )
+        + "net turbulent heat flux upward, annually averaged")
     
     nf.save_yearly(fup,
         nf.diag_name(name=diag_name_fup, **diag_kw),
         nf.nc_var_name(name=diag_name_fup, **nc_var_kw),
         nc_field_type=fup.dtype,
         nc_field_attrs={"long_name":long_name, **nc_var_attrs},
-        **save_nc_kw
-    )
+        nc_title_str="surface upward heat flux",
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

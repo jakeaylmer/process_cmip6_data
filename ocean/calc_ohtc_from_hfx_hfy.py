@@ -22,6 +22,11 @@ nc_var_attrs = {
 }
 
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean heat transport convergence"
+
+
 def calc_ohtc_C_grid(hfx, hfy, areacello):
     """"""
     
@@ -124,7 +129,8 @@ def main():
         "latitude": lat,
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
-        "nc_global_attrs": {"external_variables": "areacello"}
+        "nc_global_attrs": {"external_variables": "areacello"},
+        "nc_title_str": nc_title_str
     }
     
     diag_name_kw = {"name": diag_name,

@@ -37,6 +37,11 @@ nc_var_attrs_int_s["cell_methods"] = (
     f"{nf.nc_time_name}: mean {nf.nc_ref_lat_s_name}: sum "
     + "(area-weighted)")
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "heat flux into ocean surface polar-cap "
+nc_title_str_int = nc_title_str + "integrals"
+nc_title_str_mean = nc_title_str + "averages"
 
 def main():
     
@@ -86,7 +91,7 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
+        "year_range"   : (yr_s, yr_e),
     }
     
     true_lats_n, true_lats_n_bnds, true_hfds_avg_n = \
@@ -142,6 +147,7 @@ def main():
             "long_name": nc_long_name.format("", "south",
                 "native-grid latitude bounds"),
             **nc_var_attrs_mean_s},
+        nc_title_str=nc_title_str_mean,
         **save_nc_kw
     )
     
@@ -165,6 +171,7 @@ def main():
             "long_name": nc_long_name.format(" integrated",
                 "south", "native-grid latitude bounds"),
             **nc_var_attrs_mean_s},
+        nc_title_str=nc_title_str_int,
         **save_nc_kw
     )
     

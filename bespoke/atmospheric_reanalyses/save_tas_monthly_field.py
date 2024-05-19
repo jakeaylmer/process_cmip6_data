@@ -29,6 +29,8 @@ nc_var_attrs = {
     "units"        : nf.field_units["temperature"]
 }
 
+nc_title_str = "near-surface air temperature"
+
 
 def save_monthly_one_member(field, diagnostic_id, nc_field_name,
         model_id, member_ids, experiment_id,
@@ -38,6 +40,7 @@ def save_monthly_one_member(field, diagnostic_id, nc_field_name,
         nc_field_type=np.float64,
         nc_field_attrs={},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save a 1, 2, or 3D field of yearly-mean data.
@@ -96,24 +99,12 @@ def save_monthly_one_member(field, diagnostic_id, nc_field_name,
     
     """
     
-    #if np.ndim(field) < 2 or np.ndim(field) > 4:
-    #    raise Exception("Not programmed for fields of shape "
-    #                    + f"{np.shape(field)}")
-    
     save_dir, file_name = \
         nf.prepare_to_save(save_dir, file_name, diagnostic_id,
                            experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = nf.default_nc_file_attrs.copy()
-    nf.set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    nf.set_nc_history_attr_timestamp(nc_file_attrs)
-    nf.set_nc_source_attr(nc_file_attrs, model_id)
-    nf.set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = nf.prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with nc.Dataset(Path(save_dir, file_name), "w") as ncout:
         
@@ -179,8 +170,8 @@ def main():
     
     cmd = prsr.parse_args()
     
-    yr_s, yr_e = md.reanalyses_year_range[cmd.reanalysis]
-    ny, nx = md.reanalyses_grid_dims_atm[cmd.reanalysis]
+    yr_s, yr_e = md.reanalysis_year_range[cmd.reanalysis]
+    ny, nx = md.reanalysis_grid_dims_atm[cmd.reanalysis]
     ens_members = ["r1i1p1f1"]
     
     nt = yr_e - yr_s + 1
@@ -204,7 +195,7 @@ def main():
     #     specified here and in metadata.py):
     nc_files = [
         Path(md.dir_raw_nc_data_reanalyses, cmd.reanalysis,
-             md.reanalyses_nc_file_fmt["tas"].format(y))
+             md.reanalysis_nc_file_fmt["tas"].format(y))
         for y in range(yr_s, yr_e+1, 1)
     ]
     # (2) Load data using netcdf_tools.py from external
@@ -218,8 +209,8 @@ def main():
     #     version of latitude loaded for areacella.
     print("Loading raw data...")
     lat_raw, tas = nct.get_arrays(nc_files,
-        [md.reanalyses_nc_coord_names[cmd.reanalysis][1]],
-        [md.reanalyses_nc_names["tas"][cmd.reanalysis]])
+        [md.reanalysis_nc_coord_names[cmd.reanalysis][1]],
+        [md.reanalysis_nc_names["tas"][cmd.reanalysis]])
     
     # Latitude must be increasing:
     if lat_raw[1] < lat_raw[0]:
@@ -248,12 +239,6 @@ def main():
     # (nt, n_ens, ny, nx)]:
     tas = np.expand_dims(tas, axis=1)
     
-    print(np.shape(lon))
-    print(np.shape(lon_bnds))
-    print(np.shape(lat))
-    print(np.shape(lat_bnds))
-    print(np.shape(tas))
-    
     # ------------------------------------------------------- #
     
     save_nc_kw = {
@@ -266,17 +251,16 @@ def main():
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
         "nc_global_attrs": {
-            "comment": "Atmospheric reanalysis diagnostics for "
-                       + "analysis in the work, \'Modulation "
-                       + "of future sea ice loss by ocean heat "
-                       + "transport\'. This dataset contains "
-                       + "one diagnostic for one reanalysis "
-                       + "(source).",
-            "references": md.reanalyses_references[cmd.reanalysis],
+            "comment": "Atmospheric reanalysis diagnostics "
+                       + "for the analysis presented in Aylmer "
+                       + "et al. 2024 [1]. This dataset "
+                       + "contains one diagnostic for "
+                       + "one reanalysis "
+                       + f"({nf.nc_file_attrs_model_name}) "
+                       + "[2,3].",
             "external_variables": "areacella",
-            "source": md.reanalyses_long_names[cmd.reanalysis],
             "title": "Atmospheric reanalysis diagnostics: "
-                + cmd.reanalysis
+                     + f"{cmd.reanalysis}: {nc_title_str}"
         }
     }
     

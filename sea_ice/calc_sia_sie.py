@@ -147,6 +147,7 @@ def main():
             "long_name": nc_area_long_name.format("South", ""),
             **nc_var_area_attrs},
         monthly=True,
+        nc_title_str="sea ice area",
         **save_nc_kw
     )
     
@@ -166,6 +167,7 @@ def main():
             "long_name": nc_area_long_name.format("South",
                 ", annually averaged"),
             **nc_var_area_attrs},
+        nc_title_str="sea ice area",
         **save_nc_kw
     )
     
@@ -192,6 +194,7 @@ def main():
             **nc_var_extent_attrs},
         scalar_coord_var_n_kw=sie_coord_var_attrs,
         monthly=True,
+        nc_title_str="sea ice extent",
         **save_nc_kw
     )
     
@@ -212,6 +215,7 @@ def main():
                 ", annually averaged"),
             **nc_var_extent_attrs},
         scalar_coord_var_n_kw=sie_coord_var_attrs,
+        nc_title_str="sea ice extent",
         **save_nc_kw
     )
     

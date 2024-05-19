@@ -30,6 +30,10 @@ nc_var_attrs_s["cell_methods"] = (
     f"{nf.nc_ref_lat_s_name}: point")
 
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean heat transport"
+
 
 def main():
     
@@ -88,9 +92,9 @@ def main():
         nc_field_attrs_s={
             "long_name": nc_long_name.format("south"),
             **nc_var_attrs_s},
-    )
+        nc_title_str=nc_title_str)
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

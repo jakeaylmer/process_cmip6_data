@@ -6,8 +6,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 diag_name   = "o{}temptend"
 nc_var_name = "o{}temptend"
@@ -23,6 +22,10 @@ nc_var_attrs = {
     "cell_methods" : f"area: mean {nf.nc_time_name}: mean",
     "units"        : nf.field_units["heatflux"]
 }
+
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean column heat content tendency"
 
 
 def main():
@@ -89,7 +92,8 @@ def main():
         "latitude": lat,
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
-        "nc_global_attrs": {"external_variables": "areacello"}
+        "nc_global_attrs": {"external_variables": "areacello"},
+        "nc_title_str": nc_title_str
     }
     
     diag_name_kw = {"name": diag_name.format(ftype),

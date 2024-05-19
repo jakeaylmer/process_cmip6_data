@@ -32,8 +32,8 @@ def main():
     
     lon, lat = load_raw_data._load_coordinate_arrays(
         Path(md.dir_raw_nc_data_reanalyses, cmd.reanalysis,
-             md.reanalyses_nc_file_fmt["tas"].format(year_sel)),
-        md.reanalyses_nc_coord_names[cmd.reanalysis])
+             md.reanalysis_nc_file_fmt["tas"].format(year_sel)),
+        md.reanalysis_nc_coord_names[cmd.reanalysis])
     
     # Latitude should be increasing:
     if lat[1] < lat[0]:
@@ -55,9 +55,9 @@ def main():
     # ------------------------------------------------------- #
     
     save_nc_kw = {
-        "model_id": md.reanalyses_long_names[cmd.reanalysis],
+        "model_id": cmd.reanalysis,
         "member_id": "N/A",
-        "experiment_id": "N/A",
+        "experiment_id": "reanalysis",
         "grid_label": "gr",
         "which": "a",
         "longitude": lon,
@@ -66,15 +66,15 @@ def main():
         "latitude_bnds": lat_bnds,
         "nc_field_attrs": nc_var_attrs,
         "nc_global_attrs": {
-            "comment": "Atmospheric reanalysis diagnostics for "
-                       + "analysis in the work, \'Modulation "
-                       + "of future sea ice loss by ocean heat "
-                       + "transport\'. This dataset contains "
-                       + "one diagnostic for one reanalysis "
-                       + "(source).",
-            "title": f"Atmosphere grid data for reanalysis: "
-                + cmd.reanalysis,
-            "references": md.reanalyses_references[cmd.reanalysis]
+            "comment": "Atmospheric reanalysis diagnostics "
+                       + "for the analysis presented in Aylmer "
+                       + "et al. 2024 [1]. This dataset "
+                       + "contains atmosphere grid data for "
+                       + "one reanalysis "
+                       + f"({nf.nc_file_attrs_model_name}) "
+                       + "[2,3].",
+            "title": "Atmosphere grid data for reanalysis: "
+                     + cmd.reanalysis
         },
         "save_dir" : Path(md.dir_out_nc_data_reanalyses,
                           "areacella"),

@@ -42,6 +42,14 @@ nc_var_attrs_int_s["cell_methods"] = (
     f"{nf.nc_time_name}: mean {nf.nc_ref_lat_s_name}: sum "
     + "(area-weighted)")
 
+
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean column heat content tendency polar-cap "
+nc_title_str_int = nc_title_str + "integrals"
+nc_title_str_mean = nc_title_str + "averages"
+
+
 def main():
     
     cmd = script_tools.default_cmd_args()
@@ -172,6 +180,7 @@ def main():
                 " averaged", "south"),
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_mean_s},
+        nc_title_str=nc_title_str_mean,
         **save_nc_kw
     )
     
@@ -199,6 +208,7 @@ def main():
                 "", "south"),
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_int_s},
+        nc_title_str=nc_title_str_int,
         **save_nc_kw
     )
 

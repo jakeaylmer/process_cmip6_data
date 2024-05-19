@@ -51,12 +51,12 @@ def main():
         "latitude_bnds": lat_bnds,
         "nc_field_attrs": nc_var_attrs,
         "nc_global_attrs": {"comment": "Climate model "
-            + "diagnostics derived from the CMIP6 archive for "
-            + "the analysis in the work, 'Modulation of future "
-            + "sea ice loss by ocean heat transport'. This "
-            + "dataset contains atmosphere grid data for one "
-            + f"model ({nf.nc_file_attrs_model_name}), "
-            + f"taken from one experiment "
+            + "diagnostics derived from outputs in the CMIP6 "
+            + "archive for the analysis presented in Aylmer et "
+            + "al. 2024 [1]. This dataset contains atmosphere "
+            + "grid data for one model "
+            + f"({nf.nc_file_attrs_model_name}), taken from "
+            + "one experiment "
             + f"({nf.nc_file_attrs_experiment_name}) and "
             + f"ensemble member ("
             + f"{nf.nc_file_attrs_member_name}).",
@@ -69,5 +69,5 @@ def main():
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

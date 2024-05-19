@@ -29,31 +29,37 @@ def nc_file_path(diagnostic_id, experiment_id, model_id):
         nc_save_dir(diagnostic_id, experiment_id, model_id),
         nc_file_name(diagnostic_id, experiment_id, model_id)
     )
-    
 
-
-nc_file_attrs_model_name = "source"
+nc_file_attrs_model_name = "source_id"
 nc_file_attrs_experiment_name = "experiment_id"
 nc_file_attrs_member_name = "member_id"
 nc_file_attrs_grid_name = "grid_label"
 
+paper_reference = ("Aylmer, J. R., D. Ferreira, and D. L. "
+                   + "Feltham, 2024: Impact of ocean heat "
+                   + "transport on sea ice captured by a "
+                   + "simple energy balance model, Commun. "
+                   + "Earth Environ.")
+
+# Note hard-coded global attributes: "title", "references"
+
 default_nc_file_attrs = {
     "author"     : "Jake R. Aylmer",
+    "author_institution": "Centre for Polar Observation and Modelling (CPOM), "
+                          + "Department of Meteorology, University of Reading, UK",
     "contact"    : "j.aylmer@reading.ac.uk",
-    "coauthors"  : "David G. Ferreira, Daniel L. Feltham",
-    "comment"    : "Climate model diagnostics derived from the CMIP6 "
-                   + "archive for the analysis in the work, 'Modulation "
-                   + "of future sea ice loss by ocean heat transport'. "
-                   + "This dataset contains one diagnostic for one model "
-                   + f"({nc_file_attrs_model_name}) and one experiment "
-                   + f"({nc_file_attrs_experiment_name}).",
-    "references" : "The associated work is not published; see the "
-                   + "author's PhD thesis for further information: "
-                   + "doi:10.48683/1926.00108418",
-    "institution": "Centre for Polar Observation and Modelling (CPOM), "
-                   + "Department of Meteorology, University of Reading, UK",
-    "title"      : "CMIP6 diagnostics: {}, {}",
+    "coauthors"  : "David Ferreira, Daniel L. Feltham",
+    "comment"    : "Climate model diagnostics derived from outputs in the CMIP6 "
+                   + "archive for the analysis presented in Aylmer et al. 2024 [1]. "
+                   + "This dataset contains one diagnostic "
+                   + f"for one model ({nc_file_attrs_model_name}) "
+                   + "and one experiment "
+                   + f"({nc_file_attrs_experiment_name}) [2,3]."
 }
+
+# String to put between string attributes that have multiple
+# items (primarily for "references" and "history" attributes):
+nc_list_delimiter = ";\n"
 
 # Dimension names
 # ------------------------- #
@@ -626,52 +632,209 @@ def set_ripf_data(ncdat, ens_members):
 
 
 
-def set_nc_history_attr_timestamp(ncfa):
+def _set_nc_history_attr_timestamp(ncfa):
     """Set the history global attribute to the current
     time. Updates the 'history' key in the attributes
     dictionary, not the actual netCDF file.
     """
-    ncfa["history"] = "created " + \
+    ncfa["history"] = (
         dt.now(tz.utc).strftime("%H:%M UTC %d %b %Y")
+        + ": created;")
 
 
 
-def set_nc_source_attr(ncfa, model_id):
-    """Set the source global attribute. Updates the dictionary
-    key, not the actual netCDF file."""
+def _set_nc_references_attr(ncfa, model_id, experiment_id):
+    """Set the references global attribute. Updates the
+    dictionary key 'references', not the actual netCDF file
+    attribute. Returns ref_count (integer) corresponding to the
+    number of references appended (usually 3).
+    """
+    
+    ref_count = 0
+    ref_str = f"[{ref_count+1}] {paper_reference}"
+    ref_str += nc_list_delimiter
+    ref_count += 1
+    
+    if model_id in md.model_reference.keys():
+        # Add CMIP6 model description reference:
+        ref_str += f"[{ref_count+1}] "
+        ref_str += md.model_reference[model_id]
+        ref_str += nc_list_delimiter
+        ref_count += 1
+    elif model_id in md.reanalysis_reference.keys():
+        # Add reanalysis description reference:
+        ref_str += f"[{ref_count+1}] "
+        ref_str += md.reanalysis_reference[model_id]
+        ref_str += nc_list_delimiter
+        ref_count += 1
+    
+    if model_id in md.data_reference.keys():
+        # Add CMIP6 data reference:
+        if experiment_id in md.data_reference[model_id].keys():
+            ref_str += f"[{ref_count+1}] "
+            ref_str += md.data_reference[model_id][experiment_id]
+            ref_str += nc_list_delimiter
+            ref_count += 1
+    elif model_id in md.reanalysis_data_reference.keys():
+        # Add reanalysis data reference:
+        ref_str += f"[{ref_count+1}] "
+        ref_str += md.reanalysis_data_reference[model_id]
+        ref_str += nc_list_delimiter
+        ref_count += 1
+    
+    ncfa["references"] = ref_str
+    
+    return ref_count
+
+
+
+def _set_nc_source_attr(ncfa, model_id, experiment_id,
+                       reference_number=3):
+    """Set source global attribute. Updates the dictionary key,
+    not the actual netCDF file. Not to be confused with the
+    source_id attribute, which is a CMIP6 attribute and refers
+    to what I have generally called 'model_id' in most places of
+    the code (in retrospect a poor choice, perhaps).
+    
+    Will also set the source attribute for atmospheric
+    reanalysis diagnostics if input model_id is not a "defined_
+    model" in metadata but is a "defined_reanalysis".
+    
+    Optional argument: reference_number (integer): this should
+    be the reference number of the dataset reference (not model
+    description or paper) in the ncfa "references" attribute
+    (hence that attribute should be set first). Can also be
+    negative, in which case no citation is added.
+    """
+    
+    if model_id in md.defined_models:
+        ncfa["source"] = md.institution_id[model_id][experiment_id]
+        ncfa["source"] += " " + md.model_long_name[model_id]
+        ncfa["source"] += " model output prepared for CMIP6 "
+        ncfa["source"] += md.activity[experiment_id] + " "
+        ncfa["source"] += experiment_id
+        ncfa["source"] += ", version "
+        ncfa["source"] += md.data_version[model_id][experiment_id]
+    elif model_id in md.defined_reanalyses:
+        ncfa["source"] = md.reanalysis_long_name[model_id]
+    
+    if reference_number >= 0:
+        ncfa["source"] += f" [{int(reference_number)}]"
+
+
+
+def _set_nc_source_id_attr(ncfa, model_id):
+    """Set the source_id global attribute. Updates the
+    dictionary key, not the actual netCDF file. Not to be
+    consfused with the "source" attribute, which refers to the
+    source data/standard CF attribute, and is a slightly more
+    descriptive version of where the original data came from.
+    Here, source_id is just the model (or atmospheric
+    reanalysis) name (in retrospect, it would have been better
+    if I just called "model_id", "source_id", in the first
+    place).
+    """
     ncfa[nc_file_attrs_model_name] = model_id
 
 
 
-def set_nc_experiment_attr(ncfa, experiment_id):
+def _set_nc_experiment_attr(ncfa, experiment_id):
     """Set the experiment global attribute. Updates the
     dictionary key, not the actual netCDF file."""
     ncfa[nc_file_attrs_experiment_name] = experiment_id
 
 
 
-def set_nc_member_attr(ncfa, member_id):
+def _set_nc_member_attr(ncfa, member_id):
     """Set the member_id global attribute (only for saving
     fields of single members, without member dimension). Updates
     the dictionary key, not the actual netCDF file."""
     ncfa[nc_file_attrs_member_name] = member_id
 
 
-def set_nc_grid_attr(ncfa, grid_label):
+
+def _set_nc_grid_attr(ncfa, grid_label):
     """Set the grid_label global attribute (only for saving
     fields of single members). Updates the dictionary key, not
     the actual netCDF file."""
     ncfa[nc_file_attrs_grid_name] = grid_label
 
 
-def set_nc_title_attr(ncfa, model_id, experiment_id):
+
+def _set_nc_title_attr(ncfa, model_id, experiment_id, title_str,
+                      nc_title_fmt="CMIP6 processed diagnostics"
+                                   + " for {}, {}: {}"):
     """Format the title global attribute with the model
     and experiment names. Updates the dictionary key,
     not the actual netCDF file.
     """
-    ncfa["title"] = ncfa["title"].format(model_id,
-                                         experiment_id)
+    ncfa["title"] = ("CMIP6 processed diagnostics for "
+                     + f"{model_id}, {experiment_id}")
+    
+    if title_str != "":
+        ncfa["title"] += f": {title_str}"
 
+
+
+def prepare_nc_global_attrs(model_id, experiment_id,
+        nc_title_str="", custom_attrs={}):
+    """Sets the global netCDF attributes dictionary by combining
+    the defaults with any custom/ad-hoc attributes and over-
+    riding any of the defaults.
+    
+    Parameters
+    ----------
+    model_id      : str, model (or atmospheric reanalysis) name
+    experiment_id : str, experiment name
+    
+    
+    Optional parameters
+    -------------------
+    nc_title_str : str, default = ""
+        Short description of diagnostics included in the netCDF
+        file (does not, and should not, refer to the model or
+        experiment as this information is added automatically).
+        It need not be a thorough description or include
+        specifics of calculation methods, since this is
+        (generally) included in the variable attributes.
+    
+    custom_attrs : dict {str: str}, default = {}
+        Any ad-hoc attributes to set. These are set last, so if
+        the defaults need to be over-ridden simply include here.
+    
+    
+    Returns
+    -------
+    nc_file_attrs : dict {str: str}
+        The global netCDF attributes.
+    
+    """
+    
+    # Start with the defaults:
+    nc_file_attrs = default_nc_file_attrs.copy()
+    
+    _set_nc_experiment_attr(nc_file_attrs, experiment_id)
+    _set_nc_history_attr_timestamp(nc_file_attrs)
+    _set_nc_source_id_attr(nc_file_attrs, model_id)
+    _set_nc_title_attr(nc_file_attrs, model_id, experiment_id,
+                      nc_title_str)
+    
+    # Set "references" before "source", as the former gives the
+    # reference counter for the last reference which corresponds
+    # to the data citation, which in turn is used in the
+    # "source" attribute:
+    ref_counter = _set_nc_references_attr(nc_file_attrs,
+                                          model_id,
+                                          experiment_id)
+    _set_nc_source_attr(nc_file_attrs, model_id, experiment_id,
+                        ref_counter)
+    
+    # Set the custom attributes, overriding the defaults if
+    # provided:
+    for extra_attr in custom_attrs.keys():
+        nc_file_attrs[extra_attr] = custom_attrs[extra_attr]
+    
+    return nc_file_attrs
 
 
 def prepare_to_save(save_dir_in=None, file_name_in=None,
@@ -713,6 +876,7 @@ def save_yearly(field, diagnostic_id, nc_field_name, model_id,
         nc_field_type=np.float64,
         nc_field_attrs={},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save a 1, 2, or 3D field of yearly-mean data.
@@ -779,16 +943,8 @@ def save_yearly(field, diagnostic_id, nc_field_name, model_id,
         prepare_to_save(save_dir, file_name, diagnostic_id,
                         experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with Dataset(Path(save_dir, file_name), "w") as ncout:
         
@@ -884,6 +1040,7 @@ def save_time_series_by_hemi(field_n, field_s,
         scalar_coord_var_n_kw={"name": None},
         scalar_coord_var_s_kw={"name": None},
         nc_global_attrs={},
+        nc_title_str="",
         monthly=False, save_dir=None, file_name=None
     ):
     """Save time series data, one for each hemisphere.
@@ -939,16 +1096,8 @@ def save_time_series_by_hemi(field_n, field_s,
         prepare_to_save(save_dir, file_name, diagnostic_id,
                         experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with Dataset(Path(save_dir, file_name), "w") as ncout:
         
@@ -1004,6 +1153,7 @@ def save_yearly_ref_lat(fint_n, fint_s, ref_lat_n, ref_lat_s,
         nc_field_attrs_n={},
         nc_field_attrs_s={},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save a yearly data for integrations/averages above a
@@ -1021,16 +1171,8 @@ def save_yearly_ref_lat(fint_n, fint_s, ref_lat_n, ref_lat_s,
         prepare_to_save(save_dir, file_name, diagnostic_id,
                         experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with Dataset(Path(save_dir, file_name), "w") as ncout:
         
@@ -1087,6 +1229,7 @@ def save_areacell(areacell, model_id, member_id, experiment_id,
         nc_field_type=np.float64,
         nc_field_attrs={},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save areacella or areacello data in a standardised
@@ -1159,18 +1302,12 @@ def save_areacell(areacell, model_id, member_id, experiment_id,
         file_name = f"areacell{which}_{model_id}.nc"
     
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_member_attr(nc_file_attrs, member_id)
-    set_nc_grid_attr(nc_file_attrs, grid_label)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    # Some extra, default global attributes in this case:
+    _set_nc_grid_attr(nc_file_attrs, grid_label)
+    _set_nc_member_attr(nc_file_attrs, member_id)
     
     with Dataset(Path(save_dir_out,file_name), "w") as ncout:
         
@@ -1225,6 +1362,7 @@ def save_yearly_ref_lat_single(fint, ref_lat,
         unlimited_ref_lat_dim=True,
         nc_field_attrs={},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save a yearly data for integrations/averages above a
@@ -1242,16 +1380,8 @@ def save_yearly_ref_lat_single(fint, ref_lat,
         prepare_to_save(save_dir, file_name, diagnostic_id,
                         experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with Dataset(Path(save_dir, file_name), "w") as ncout:
         
@@ -1301,6 +1431,7 @@ def save_ice_edge_latitude_per_longitude(iel_n, iel_s, lon,
         scalar_coord_var_n_kw={"name": None},
         scalar_coord_var_s_kw={"name": None},
         nc_global_attrs={},
+        nc_title_str="",
         save_dir=None, file_name=None
     ):
     """Save ice edge latitude data as a function of time,
@@ -1318,16 +1449,8 @@ def save_ice_edge_latitude_per_longitude(iel_n, iel_s, lon,
         prepare_to_save(save_dir, file_name, diagnostic_id,
                         experiment_id, model_id)
     
-    # Prepare the global attributes: ------------------------ #
-    nc_file_attrs = default_nc_file_attrs.copy()
-    set_nc_title_attr(nc_file_attrs, model_id, experiment_id)
-    set_nc_history_attr_timestamp(nc_file_attrs)
-    set_nc_source_attr(nc_file_attrs, model_id)
-    set_nc_experiment_attr(nc_file_attrs, experiment_id)
-    
-    for extra_attr in nc_global_attrs.keys():
-        nc_file_attrs[extra_attr] = nc_global_attrs[extra_attr]
-    # ------------------------------------------------------- #
+    nc_file_attrs = prepare_nc_global_attrs(model_id,
+        experiment_id, nc_title_str, nc_global_attrs)
     
     with Dataset(Path(save_dir, file_name), "w") as ncout:
         

@@ -28,6 +28,10 @@ nc_var_attrs_s = nc_var_attrs_n.copy()
 nc_var_attrs_s["cell_methods"] = (f"{nf.nc_time_name}: "
     + f"mean {nf.nc_ref_lat_s_name}: mean (area-weighted)")
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "near-surface air temperature polar-cap averages"
+
 
 def main():
     
@@ -86,7 +90,8 @@ def main():
         "year_range"   : (yr_s, yr_e),
         "nc_global_attrs": {
             nf.nc_file_attrs_experiment_name: \
-                f"esm-{cmd.experiment}"}
+                f"esm-{cmd.experiment}"},
+        "nc_title_str" : nc_title_str
     }
     
     # Above: overwrite global attribute experiment_id with esm

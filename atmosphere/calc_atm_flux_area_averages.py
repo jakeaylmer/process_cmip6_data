@@ -35,6 +35,16 @@ nc_standard_names = [
     None
 ]
 
+# Short descriptions added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_strs = [
+    "surface downwelling longwave radiation polar-cap averages",
+    "outgoing longwave radiation polar-cap averages",
+    "surface net downward shortwave radiation polar-cap averages",
+    "top of atmosphere net shortwave radiation polar-cap averages",
+    "surface upward heat flux polar-cap averages"
+]
+
 nc_var_attrs_n = {
     "units"       : nf.field_units["heatflux"],
     "cell_methods": f"{nf.nc_time_name}: mean "
@@ -45,7 +55,6 @@ nc_var_attrs_n = {
 nc_var_attrs_s = nc_var_attrs_n.copy()
 nc_var_attrs_s["cell_methods"] = (f"{nf.nc_time_name}: "
     + f"mean {nf.nc_ref_lat_s_name}: mean (area-weighted)")
-
 
 
 def main():
@@ -100,8 +109,9 @@ def main():
     
     if np.ndim(lat) == 1:
         
-        for dn, ln, sn in zip(
-                diag_names, nc_long_names, nc_standard_names
+        for dn, ln, sn, ts in zip(
+                diag_names, nc_long_names, nc_standard_names,
+                nc_title_strs
             ):
             
             # Diagnostic (ldn) and netCDF variable (lvn)
@@ -162,6 +172,7 @@ def main():
                     "long_name": ln.format("south",
                         "native-grid latitude bounds"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
+                nc_title_str=ts,
                 **save_nc_kw
             )
             
@@ -186,6 +197,7 @@ def main():
                         "native-grid latitude bounds, interpol"
                         + "ated to reference latitudes"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
+                nc_title_str=ts,
                 **save_nc_kw
             )
     
@@ -260,6 +272,7 @@ def main():
                         "reference latitudes based on cell-"
                         "center latitudes"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
+                nc_title_str=ts,
                 **save_nc_kw
             )
 

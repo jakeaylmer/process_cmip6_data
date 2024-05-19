@@ -24,6 +24,9 @@ nc_var_attrs = {
     "units"        : nf.field_units["temperature"]
 }
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "near-surface air temperature"
 
 def main():
     
@@ -87,7 +90,8 @@ def main():
         "nc_global_attrs": {
             "external_variables": "areacella",
             nf.nc_file_attrs_experiment_name: \
-                f"esm-{cmd.experiment}"}
+                f"esm-{cmd.experiment}"},
+        "nc_title_str": nc_title_str
     }
     
     # Above: overwrite global attribute experiment_id with esm

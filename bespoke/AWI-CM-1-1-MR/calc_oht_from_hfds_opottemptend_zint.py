@@ -34,6 +34,9 @@ nc_var_attrs_s["cell_methods"] = (
     f"{nf.nc_time_name}: mean " + 
     f"{nf.nc_ref_lat_s_name}: point")
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "ocean heat transport"
 
 def main():
     
@@ -110,7 +113,8 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
+        "year_range"   : (yr_s, yr_e),
+        "nc_title_str" : nc_title_str
     }
     
     diag_name_kw = {

@@ -5,8 +5,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Basic diagnostic name (details such as time averaging, zonal
 # mean, etc., and the corresponding netCDF variable name, are
@@ -27,6 +26,10 @@ nc_var_attrs_n = {
 nc_var_attrs_s = nc_var_attrs_n.copy()
 nc_var_attrs_s["cell_methods"] = (f"{nf.nc_time_name}: "
     + f"mean {nf.nc_ref_lat_s_name}: mean (area-weighted)")
+
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "near-surface air temperature polar-cap averages"
 
 
 def main():
@@ -78,7 +81,8 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
+        "year_range"   : (yr_s, yr_e),
+        "nc_title_str" : nc_title_str
     }
     
     diag_kw["space_methods"] = nf.diag_nq_area_mean
@@ -204,5 +208,5 @@ def main():
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

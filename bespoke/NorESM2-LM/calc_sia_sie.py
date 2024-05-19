@@ -67,7 +67,7 @@ def main():
     #     postp_plotting_faq.html
     # 
     # [Section 4.2 "Different sea-ice and ocean grid",
-    #  accessed 24/05/2023]
+    #  accessed 17/05/2024]
     # -------------------------------------------------------- #
     lat = lat[:-1,:]
     areacello = areacello[:-1,:]
@@ -172,6 +172,7 @@ def main():
             "long_name": nc_area_long_name.format("South", ""),
             **nc_var_area_attrs},
         monthly=True,
+        nc_title_str="sea ice area",
         **save_nc_kw
     )
     
@@ -191,6 +192,7 @@ def main():
             "long_name": nc_area_long_name.format("South",
                 ", annually averaged"),
             **nc_var_area_attrs},
+        nc_title_str="sea ice area",
         **save_nc_kw
     )
     
@@ -217,6 +219,7 @@ def main():
             **nc_var_extent_attrs},
         scalar_coord_var_n_kw=sie_coord_var_attrs,
         monthly=True,
+        nc_title_str="sea ice extent",
         **save_nc_kw
     )
     
@@ -237,6 +240,7 @@ def main():
                 ", annually averaged"),
             **nc_var_extent_attrs},
         scalar_coord_var_n_kw=sie_coord_var_attrs,
+        nc_title_str="sea ice extent",
         **save_nc_kw
     )
     

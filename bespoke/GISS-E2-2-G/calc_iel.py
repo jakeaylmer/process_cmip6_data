@@ -185,6 +185,7 @@ def main():
             "long_name": nc_long_name.format("South", "", ""),
             **nc_var_attrs},
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
+        nc_title_str="sea ice-edge latitude",
         **save_nc_kw
     )
     
@@ -206,6 +207,7 @@ def main():
             **nc_var_zm_attrs},
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
         monthly=True,
+        nc_title_str="sea ice-edge latitude zonal mean",
         **save_nc_kw
     )
     
@@ -227,6 +229,7 @@ def main():
             **nc_var_zm_attrs},
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
         monthly=False,
+        nc_title_str="sea ice-edge latitude zonal mean",
         **save_nc_kw
     )
 

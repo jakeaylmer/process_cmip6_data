@@ -32,6 +32,10 @@ nc_var_attrs_s = nc_var_attrs_n.copy()
 nc_var_attrs_s["cell_methods"] = (f"{nf.nc_time_name}: "
     + f"mean {nf.nc_ref_lat_s_name}: mean (area-weighted)")
 
+# Short description added to netCDF "title" attribute (need
+# not be completely accurate/detailed here):
+nc_title_str = "near-surface air temperature polar-cap averages"
+
 
 def main():
     
@@ -49,7 +53,7 @@ def main():
     
     cmd = prsr.parse_args()
     
-    yr_s, yr_e = md.reanalyses_year_range[cmd.reanalysis]
+    yr_s, yr_e = md.reanalysis_year_range[cmd.reanalysis]
     
     ref_lats_n = md.default_ref_lats_n
     ref_lats_s = md.default_ref_lats_s
@@ -99,16 +103,15 @@ def main():
         "experiment_id"  : "reanalysis",
         "year_range"     : (yr_s, yr_e),
         "nc_global_attrs": {
-            "comment": "Atmospheric reanalysis diagnostics for "
-                       + "analysis in the work, \'Modulation "
-                       + "of future sea ice loss by ocean heat "
-                       + "transport\'. This dataset contains "
-                       + "one diagnostic for one reanalysis "
-                       + "(source).",
-            "source": md.reanalyses_long_names[cmd.reanalysis],
+            "comment": "Atmospheric reanalysis diagnostics "
+                       + "for the analysis presented in Aylmer "
+                       + "et al. 2024 [1]. This dataset "
+                       + "contains one diagnostic for "
+                       + "one reanalysis "
+                       + f"({nf.nc_file_attrs_model_name}) "
+                       + "[2,3].",
             "title": "Atmospheric reanalysis diagnostics: "
-                + cmd.reanalysis,
-            "references": md.reanalyses_references[cmd.reanalysis]
+                     + f"{cmd.reanalysis}: {nc_title_str}"
         }
     }
     
