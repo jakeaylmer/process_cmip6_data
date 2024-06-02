@@ -218,10 +218,12 @@ nc_var_nq_area_integral     = ""
 diag_nq_native               = "_gn"
 diag_nq_native_interp        = "_gn_interp"
 diag_nq_cell_center_approx   = "_cc_approx"
+diag_nq_regridded            = "_gr"
 
 nc_var_nq_native             = ""
 nc_var_nq_native_interp      = ""
 nc_var_nq_cell_center_approx = ""
+nc_var_nq_regridded          = ""
 
 # ------ for ice edge latitude interpolation:
 diag_nq_4deg_bil   = "_4deg_bil"

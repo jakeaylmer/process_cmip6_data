@@ -1369,3 +1369,103 @@ reanalysis_nc_names = {
         "MERRA-2": "T2M"
     }
 }
+
+
+# ========================================================== #
+# PASSIVE MICROWAVE SEA ICE CONCENTRATION METADATA
+# ========================================================== #
+
+# Two datasets are used, obtained from the National Snow and
+# Ice Data Center (NSIDC), for passive microwave observations
+# of sea ice concentration.
+
+# Output data directory:
+dir_out_nc_data_nsidc = Path("/storage", "silver", "cpom",
+                             "gb919150", "phd",
+                             "passive_microwave")
+# No input directory needed as this data is processed from a 
+# bash script where the paths are passed in explicitly.
+
+
+# Dimensions of raw data in each hemisphere ("n"orthern and
+# "s"outhern) on the NSIDC 25 km polar stereographic grid:
+nsidc_grid_dims = {"n": (448, 304), "s": (332, 316)}
+
+nsidc_lonlat_file = {
+    "n": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
+              "NSIDC-0771_polar_stereographic_ancilliary_v1",
+              "NSIDC0771_LatLon_PS_N25km_v1.0.nc"),
+    "s": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
+              "NSIDC-0771_polar_stereographic_ancilliary_v1",
+              "NSIDC0771_LatLon_PS_S25km_v1.0.nc")
+}
+
+nsidc_areacell_file = {
+    "n": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
+              "NSIDC-0771_polar_stereographic_ancilliary_v1",
+              "NSIDC0771_CellArea_PS_N25km_v1.0.nc"),
+    "s": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
+              "NSIDC-0771_polar_stereographic_ancilliary_v1",
+              "NSIDC0771_CellArea_PS_S25km_v1.0.nc")
+}
+
+# Valid ice mask for the northern hemisphere; one file per
+# month. There is no equivalent valid ice mask for the southern
+# hemisphere. This must be coded as a string so that it can
+# be .format()'ed with the month 01, 02, ..., etc.:
+nsidc_valid_ice_mask_n_nc_file_fmt = \
+    str(Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
+        "NSIDC-0622_north_polar_stereographic_valid_ice_mask_v1",
+        "NIC_valid_ice_mask.N25km.{:02}.1972-2007.nc"))
+
+nsidc_nc_time_units = "days since 1978-01-01"
+
+nsidc_source = {
+    "NSIDC-0051": "Sea ice concentrations from Nimbus-7 SMMR "
+                  + "and DMSP SSM/I-SSMIS passive microwave "
+                  + "data, version 2",
+    "NSIDC-0079": "Bootstrap sea ice concentrations from "
+                  + "Nimbus-7 SMMR and DMSP SSM/I-SSMIS, "
+                  + "version 4"
+}
+
+# Dataset references:
+nsidc_date_accessed = "15 April 2024"
+nsidc_data_reference = {
+    "NSIDC-0051": "DiGirolamo, N., C. L. Parkinson, D. J. "
+                  + "Cavalieri, P. Gloersen, and H. J. "
+                  + "Zwally, 2022: Sea ice concentrations "
+                  + "from Nimbus-7 SMMR and DMSP SSM/I-SSMIS "
+                  + "passive microwave data, version 2 [data "
+                  + "set], Boulder, Colorado USA, NASA "
+                  + "National Snow and Ice Data Center "
+                  + "Distributed Active Archive Center, "
+                  + "doi:10.5067/MPYG15WAA4WX [Accessed "
+                  + nsidc_date_accessed + "]",
+    "NSIDC-0079": "Comiso, J. C., 2023: Bootstrap sea ice "
+                  + "concentrations from Nimbus-7 SMMR and "
+                  + "DMSP SSM/I-SSMIS, version 4 [data set], "
+                  + "Boulder, Colorado USA, NASA National "
+                  + "Snow and Ice Data Center Distributed "
+                  + "Active Archive Center, "
+                  + "doi:10.5067/X5LG68MH013O [Accessed "
+                  + nsidc_date_accessed + "]",
+    "NSIDC-0622": "Meier, W. N., J. Stroeve, F. Fetterer, M. "
+                  + "Savoie, and H. Wilcox, 2015: Polar "
+                  + "stereographic valid ice masks derived "
+                  + "from National Ice Center monthly sea ice "
+                  + "climatologies, version 1 [data set], "
+                  + "Boulder, Colorado USA, NASA National Snow "
+                  + "and Ice Data Center Distributed Active "
+                  + "Archive Center, doi:10.5067/M4PUJAQRI2DS "
+                  + f"[Accessed {nsidc_date_accessed}]",
+    "NSIDC-0771": "Stewart, J. S., W. N. Meier, and D. J. "
+                  + "Scott, 2022: Polar stereographic "
+                  + "ancillary grid information, version 1 "
+                  + "[data set], Boulder, Colorado USA, "
+                  + "National Snow and Ice Data Center, "
+                  + "doi:10.5067/N6INPBT8Y104 "
+                  + f"[Accessed {nsidc_date_accessed}]"
+}
+
+defined_nsidc_datasets = list(nsidc_data_reference.keys())
