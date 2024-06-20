@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Working directory; this MUST be set to the directory of the
+# package:
+workDir="${HOME}"
+
 # This script runs directly on the raw netCDF files for the
 # passive microwave sea ice concentration data downloaded from
 # the National Snow and Ice Data Center (NSIDC). Specifically,
@@ -71,6 +75,7 @@
 #     code, doi:10.5281/zenodo.5494523
 # ============================================================ #
 
+cd ${workDir}
 
 # ------------------------------------------------------------ #
 # Settings/paths
@@ -80,13 +85,13 @@
 # from prior steps must still exist; just allows re-running of
 # later steps). Set to strings "true" or "false":
 doStepPreparation="true"  # step (1)
-doStepClimatology="false"  # step (2)
+doStepClimatology="true"  # step (2)
 doStepInterpolate="true"  # step (3)
-doStepMakeNPmasks="false"  # step (4)
-doStepAreaExtents="false"  # step (5)
+doStepMakeNPmasks="true"  # step (4)
+doStepAreaExtents="true"  # step (5)
 doStepIceEdgeLats="true"  # step (6)
 
-keepIntermediateData="true"
+keepIntermediateData="false"
 
 # Start and end years of data, inclusive (whole years assumed):
 ys=1979
@@ -123,7 +128,7 @@ yearPoleMaskSSMIS=2015
 # Locations of raw data (each contains subdirectories YYYY
 # with the files for year YYYY exactly as downloaded from the
 # NSIDC):
-_rawDataDir="/storage/basic/cpom/gb919150/NSIDC"
+_rawDataDir=$(head -n 1 ./paths/path_nsidc_raw_data.txt)
 rawData0051N="${_rawDataDir}/NSIDC-0051_nasateam_v2/raw/nh/monthly/"
 rawData0051S="${_rawDataDir}/NSIDC-0051_nasateam_v2/raw/sh/monthly/"
 rawData0079N="${_rawDataDir}/NSIDC-0079_bootstrap_v4/raw/nh/monthly/"
@@ -131,11 +136,11 @@ rawData0079S="${_rawDataDir}/NSIDC-0079_bootstrap_v4/raw/sh/monthly/"
 
 # Directory containing this bash script and related Python
 # scripts:
-scriptsDir="${HOME}/phd/process_cmip6_data/bespoke/passive_microwave"
+scriptsDir="${workDir}/bespoke/passive_microwave"
 
 # Set a directory for intermediate files (for 1979-2022 monthly
 # data for both hemispheres and datasets, uses about 840 MB):
-wrkDir="${HOME}/tmpPassiveMicrowaveProcessing"
+wrkDir="${workDir}/tmpPassiveMicrowaveProcessing"
 
 # ------------------------------------------------------------ #
 

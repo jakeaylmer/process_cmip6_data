@@ -1,6 +1,6 @@
 """Main settings and model metadata, to be filled in manually.
 """
-
+import os
 from pathlib import Path
 import numpy as np
 
@@ -46,10 +46,39 @@ activity = {
     "ssp585"       : "ScenarioMIP"
 }
 
-dir_raw_nc_data = Path("/storage", "basic", "cpom", "gb919150",
-                       "CMIP6")
-dir_out_nc_data = Path("/storage", "silver", "cpom", "gb919150",
-                       "phd", "cmip6_processed_data")
+def _get_path(path_file, default_path=Path(os.getcwd())):
+    """Reads the first line of a file called path_file located
+    in the "paths" package directory and returns a corresponding
+    pathlib.Path instance. If the file is not found, returns a
+    default Path (the current working directory). If the
+    directory written in the text file is not absolute (e.g.,
+    starting /) then it is interpreted (or created) relative to
+    the current working directory.
+    
+    This is not a particularly robust system! Assumes that
+    'normal' paths are written in the path files; note that for
+    example neither "~" nor "$HOME" will expand to the home
+    directory, and this will likely create problematic directory
+    names.
+    """
+    try:
+        with open(Path(os.path.dirname(__file__), "..",
+                       "paths", path_file), "r") as pfile:
+            line = pfile.readline().rstrip()
+        
+        if not (line.startswith("/") or line.startswith("./")):
+            the_path = Path(os.getcwd(), line)
+        else:
+            the_path = Path(line)
+        
+    except FileNotFoundError:
+        the_path = default_path
+    return the_path
+
+dir_raw_nc_data = _get_path("path_cmip6_raw_data.txt")
+dir_out_nc_data = _get_path("path_cmip6_processed_data.txt")
+dir_qc_plots = _get_path("path_qc_plots.txt")
+
 
 # =========================================================== #
 
@@ -1241,12 +1270,11 @@ ocn_prognostic_temperature_when_does_not_exist = "pot"
 # REANALYSES METADATA
 # ========================================================== #
 
-dir_raw_nc_data_reanalyses = Path("/storage", "basic", "cpom",
-    "gb919150", "monthly_near_surface_air_temperature")
+dir_raw_nc_data_reanalyses = \
+    _get_path("path_atmospheric_reanalyses_raw_data.txt")
 
-dir_out_nc_data_reanalyses = Path("/storage", "silver", "cpom",
-                                  "gb919150", "phd",
-                                  "reanalyses")
+dir_out_nc_data_reanalyses = \
+    _get_path("path_atmospheric_reanalyses_processed_data.txt")
 
 reanalysis_long_name = {
     "CFSR"   : "Climate Forecast System Reanalysis (CFSR)",
@@ -1380,9 +1408,8 @@ reanalysis_nc_names = {
 # of sea ice concentration.
 
 # Output data directory:
-dir_out_nc_data_nsidc = Path("/storage", "silver", "cpom",
-                             "gb919150", "phd",
-                             "passive_microwave")
+dir_out_nc_data_nsidc = \
+    _get_path("path_nsidc_processed_data.txt")
 # No input directory needed as this data is processed from a 
 # bash script where the paths are passed in explicitly.
 
@@ -1392,21 +1419,13 @@ dir_out_nc_data_nsidc = Path("/storage", "silver", "cpom",
 nsidc_grid_dims = {"n": (448, 304), "s": (332, 316)}
 
 nsidc_lonlat_file = {
-    "n": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
-              "NSIDC-0771_polar_stereographic_ancilliary_v1",
-              "NSIDC0771_LatLon_PS_N25km_v1.0.nc"),
-    "s": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
-              "NSIDC-0771_polar_stereographic_ancilliary_v1",
-              "NSIDC0771_LatLon_PS_S25km_v1.0.nc")
+    "n": _get_path("path_nsidc_lonlat_n.txt"),
+    "s": _get_path("path_nsidc_lonlat_s.txt")
 }
 
 nsidc_areacell_file = {
-    "n": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
-              "NSIDC-0771_polar_stereographic_ancilliary_v1",
-              "NSIDC0771_CellArea_PS_N25km_v1.0.nc"),
-    "s": Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
-              "NSIDC-0771_polar_stereographic_ancilliary_v1",
-              "NSIDC0771_CellArea_PS_S25km_v1.0.nc")
+    "n": _get_path("path_nsidc_cellarea_n.txt"),
+    "s": _get_path("path_nsidc_cellarea_s.txt")
 }
 
 # Valid ice mask for the northern hemisphere; one file per
@@ -1414,8 +1433,7 @@ nsidc_areacell_file = {
 # hemisphere. This must be coded as a string so that it can
 # be .format()'ed with the month 01, 02, ..., etc.:
 nsidc_valid_ice_mask_n_nc_file_fmt = \
-    str(Path("/storage", "basic", "cpom", "gb919150", "NSIDC",
-        "NSIDC-0622_north_polar_stereographic_valid_ice_mask_v1",
+    str(Path(_get_path("path_nsidc_valid_ice_mask.txt"),
         "NIC_valid_ice_mask.N25km.{:02}.1972-2007.nc"))
 
 nsidc_nc_time_units = "days since 1978-01-01"

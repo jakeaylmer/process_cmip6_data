@@ -16,8 +16,12 @@ overwriteWeights=false    # if true, re-calculate interp. weights
 overwriteRemapped=false   # if true, re-interpolate data even if it exists
 keepRemappedSiconc=false  # if true, do not delete interpolated sea ice concentration data
 
+# Working directory; this MUST be set to the directory of the
+# package but can be passed as an option (-d):
+workDir="${HOME}"
+
 # : after flag indicates that the option requires an argument
-while getopts m:x:e:r:c:wok flag
+while getopts m:x:e:r:c:d:wok flag
 do
     case "${flag}" in
         m) model=${OPTARG};;
@@ -25,17 +29,23 @@ do
         e) members=(${OPTARG//,/ });;
         r) res=${OPTARG};;
         c) remapMethod=${OPTARG};;
+        d) workDir=${OPTARG};;
         w) overwriteWeights=true;;
         o) overwriteRemapped=true;;
         k) keepRemappedSiconc=true;;
     esac
 done
 
+cd ${workDir}
+
 # Directory containing CMIP6 data. Assumes the same directory
 # structure as other processing scripts (i.e., that sea ice
 # concentration data resides at
 # ${baseDir}/${model}/${experiment}/siconc/*.nc):
-baseDir="/storage/research/cpom/gb919150/CMIP6"
+baseDir=$(head -n 1 ./paths/path_cmip6_raw_data.txt)
+
+# Location of python script:
+pyScript="${workDir}/sea_ice/calc_iel.py"
 
 # Subdirectory names to contain remapping weights and
 # interpolated sea ice concentration data, respectively:
@@ -44,10 +54,6 @@ swapDirName="_swap"
 
 weightsDir="${baseDir}/${weightsDirName}"
 swapDir="/${baseDir}/${swapDirName}"
-
-# Location of python script:
-pyScript="${HOME}/phd/process_cmip6_data/sea_ice"
-pyScript="${pyScript}/calc_iel.py"
 
 # Common options to pass to python (before script name):
 pyOpts="-u -W ignore"

@@ -10,13 +10,18 @@ overwriteMaskedSiconc=false
 keepLandMask=false
 keepMaskedSiconc=false
 
+# Working directory; this MUST be set to the directory of the
+# package but can be passed as an option (-d):
+workDir="${HOME}"
+
 # : after flag indicates that the option requires an argument
-while getopts x:e:c:klow flag
+while getopts x:e:c:d:klow flag
 do
     case "${flag}" in
         x) experiment=${OPTARG};;
         e) members=(${OPTARG//,/ });;
         c) remapMethod=${OPTARG};;
+        d) workDir=${OPTARG};;
         k) keepMaskedSiconc=true;;
         l) keepLandMask=true;;
         o) overwriteLandMask=true;;
@@ -24,13 +29,18 @@ do
     esac
 done
 
-baseDir="/storage/basic/cpom/gb919150/CMIP6"
+# Directory containing CMIP6 data. Assumes the same directory
+# structure as other processing scripts (i.e., that sea ice
+# concentration data resides at
+# ${baseDir}/${model}/${experiment}/siconc/*.nc):
+baseDir=$(head -n 1 ./paths/path_cmip6_raw_data.txt)
+
+# Location of python script:
+pyScript="${workDir}/bespoke/GISS-E2-2-G/calc_iel.py"
 
 swapDirName="_swap"
 swapDir="${baseDir}/${swapDirName}"
 
-pyScript="/home/users/gb919150/phd/process_cmip6_data/bespoke"
-pyScript="${pyScript}/GISS-E2-2-G/calc_iel.py"
 pyOpts="-u -W ignore"
 
 echo "------------------------------------------------"

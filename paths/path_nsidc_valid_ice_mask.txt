@@ -1,0 +1,1 @@
+nsidc_auxilliary_data/NSIDC-0622_north_polar_stereographic_valid_ice_mask_v1

@@ -10,7 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from ..api import load_data
-from .metadata import dir_out_nc_data, members, year_range
+from .metadata import (dir_out_nc_data, dir_qc_plots, members,
+                       year_range)
 from .netcdf import nc_time_units, nc_calendar
 from .utils import ncdump
 
@@ -592,8 +593,7 @@ def fig_metadata(fig, data_path,
 
 def finish_figures(fig_list, data_path,
         savefig=False,
-        savefig_directory=Path("/home/users/gb919150/phd/",
-                               "process_cmip6_data/qc/qc_out"),
+        savefig_directory=dir_qc_plots,
         subplots_adjust_kw={"top": 0.9, "bottom":0.15},
         fig_text_kw={}
     ):

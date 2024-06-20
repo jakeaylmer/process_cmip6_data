@@ -212,7 +212,7 @@ def prepare_siconc_remapped(
         model_id            = md.default_model_id,
         experiment_id       = md.default_experiment_id,
         mask_reg_names      = ["lakes", "baltic_sea", "black_sea"],
-        remapped_data_dir   = "/storage/basic/cpom/gb919150/CMIP6/_swap",
+        remapped_data_dir   = ".",
         remap_method        = "bil",
         remap_res           = "0.5",
         original_miss_value = md.default_original_missing_value,

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Working directory; this MUST be set to the directory of the
+# package:
+workDir="${HOME}"
+
 # This script is used for ERA5 and MERRA-2 which provide
 # temperatures at points including exactly 90 degrees_north. So
 # that we can use grid cell areas for area integrals in a
@@ -17,14 +21,11 @@ newRes="r576x360"
 y1=1980
 y2=2023
 
-# Paths to raw and output data:
-rawDataDir="/storage/research/cpom/gb919150"
-rawDataDir="${rawDataDir}/monthly_near_surface_air_temperature"
-rawDataDir="${rawDataDir}/${rean}_raw"
+# Directory containing reanalysis raw data:
+baseDir=$(head -n 1 ./paths/path_atmospheric_reanalyses_raw_data.txt)
 
-outDataDir="/storage/research/cpom/gb919150"
-outDataDir="${outDataDir}/monthly_near_surface_air_temperature"
-outDataDir="${outDataDir}/${rean}"
+rawDataDir="${baseDir}/${rean}_raw"
+outDataDir="${baseDir}/${rean}"
 
 mkdir -p ${outDataDir}
 

@@ -10,21 +10,35 @@ overwriteWeights=false
 overwriteRemapped=false
 keepRemappedSiconc=false
 
+# Working directory; this MUST be set to the directory of the
+# package but can be passed as an option (-d):
+workDir="${HOME}"
+
 # : after flag indicates that the option requires an argument
-while getopts x:e:r:c:wok flag
+while getopts x:e:r:c:d:wok flag
 do
     case "${flag}" in
         x) experiment=${OPTARG};;
         e) members=(${OPTARG//,/ });;
         r) res=${OPTARG};;
         c) remapMethod=${OPTARG};;
+        d) remapMethod=${OPTARG};;
         w) overwriteWeights=true;;
         o) overwriteRemapped=true;;
         k) keepRemappedSiconc=true;;
     esac
 done
 
-baseDir="/storage/basic/cpom/gb919150/CMIP6"
+cd ${workDir}
+
+# Directory containing CMIP6 data. Assumes the same directory
+# structure as other processing scripts (i.e., that sea ice
+# concentration data resides at
+# ${baseDir}/${model}/${experiment}/siconc/*.nc):
+baseDir=$(head -n 1 ./paths/path_cmip6_raw_data.txt)
+
+# Location of python script:
+pyScript="${workDir}/sea_ice/calc_iel.py"
 
 weightsDirName="_remapWeights"
 swapDirName="_swap"
@@ -32,8 +46,6 @@ swapDirName="_swap"
 weightsDir="${baseDir}/${weightsDirName}"
 swapDir="/${baseDir}/${swapDirName}"
 
-pyScript="/home/users/gb919150/phd/process_cmip6_data/sea_ice"
-pyScript="${pyScript}/calc_iel.py"
 pyOpts="-u -W ignore"
 
 echo "------------------------------------------------"

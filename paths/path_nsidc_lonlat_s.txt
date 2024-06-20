@@ -1,0 +1,1 @@
+nsidc_auxilliary_data/NSIDC0771_LatLon_PS_S25km_v1.0.nc

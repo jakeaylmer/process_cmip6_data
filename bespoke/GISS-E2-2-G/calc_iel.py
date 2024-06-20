@@ -48,8 +48,7 @@ def main():
     # script (as these settings have already been applied or
     # defined during remapping phase):
     # -------------------------------------------------------- #
-    prsr.add_argument("--datadir", type=str,
-        default="/storage/basic/cpom/gb919150/CMIP6/_swap")
+    prsr.add_argument("--datadir", type=str, default=".")
     cmd = prsr.parse_args()
     
     yr_s, yr_e = md.year_range[cmd.experiment][cmd.model]
