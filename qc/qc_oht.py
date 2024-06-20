@@ -1,10 +1,13 @@
-import numpy as np
+"""Quality control plot: ocean heat transport (OHT). Plots
+a time series at a specified latitude (north and south) and a
+heat transport profile (i.e., specified time average as a
+function of latitude).
+"""
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -16,8 +19,7 @@ def main():
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
         "lat_eval": None,
-        "select_diag": cmd.seldiag
-    }
+        "select_diag": cmd.seldiag}
     
     # Load from keyword (defined in api._diagnostic_definitions)
     oht_n, oht_s, year, r_vals, ripf, lat_n, lat_s, data_path \
@@ -50,8 +52,7 @@ def main():
         "ensemble_members_description": ens_label,
         "diagnostic_description"      : full_diag_name,
         "plot_type"                   : "time_series_"
-            + f"{lat_eval_n:.0f}n_{abs(lat_eval_s):.0f}s"
-    }
+            + f"{lat_eval_n:.0f}n_{abs(lat_eval_s):.0f}s"}
     
     fig1, ax1 = qc.start_figure(**descr_kw)
     
@@ -107,8 +108,6 @@ def main():
         + f"averaged over years {y1y2[0]}" + u"\u2013"
         + f"{y1y2[1]}", fontsize=11)
     
-    #ax2.set_xlabel(nf.nc_ref_lat_n_name + " ("
-    #               + nf.nc_ref_lat_n_attrs["units"] + ")")
     qc.global_latitude_xaxis(ax2)
     ax2.set_ylabel(nf.field_units["heattransport"])
     ax2.legend(fontsize=8 if "all" in ens_label else 12)
@@ -117,7 +116,6 @@ def main():
         "\n".join([str(x) for x in data_paths]),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

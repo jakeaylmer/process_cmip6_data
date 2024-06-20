@@ -1,3 +1,10 @@
+"""Calculate spatial integrals of the net downward heat flux
+into the ocean between reference latitudes and the north or
+south pole. Data for the yearly-averaged net downward heat flux
+field (hfds) should already be saved; need to run
+save_areacello.py and save_hfds_yearly_field.py first.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +12,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = "hfds"
@@ -44,6 +50,7 @@ nc_title_str = "heat flux into ocean surface polar-cap "
 nc_title_str_int = nc_title_str + "integrals"
 nc_title_str_mean = nc_title_str + "averages"
 
+
 def main():
     
     cmd = script_tools.default_cmd_args()
@@ -78,13 +85,11 @@ def main():
     
     hfds_hint_n, hfds_mean_n = \
         diags.integrate_horizontally_multi_members(
-            hfds, areacello, lat, ref_lats=ref_lats_n, hemi="n"
-        )
+            hfds, areacello, lat, ref_lats=ref_lats_n, hemi="n")
     
     hfds_hint_s, hfds_mean_s = \
         diags.integrate_horizontally_multi_members(
-            hfds, areacello, lat, ref_lats=ref_lats_s, hemi="s"
-        )
+            hfds, areacello, lat, ref_lats=ref_lats_s, hemi="s")
     
     hfds_hint_n /= 1.0E15  # in petawatts
     hfds_hint_s /= 1.0E15
@@ -95,8 +100,7 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
-    }
+        "year_range"   : (yr_s, yr_e)}
     
     print("Saving to NetCDF...")
     
@@ -124,8 +128,7 @@ def main():
             "long_name": nc_long_name.format("", "south"),
             **nc_var_attrs_mean_s},
         nc_title_str=nc_title_str_mean,
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_name_kw["space_methods"] = nf.diag_nq_area_integral
     nc_var_name_kw["space_methods"] = nf.nc_var_nq_area_integral
@@ -148,8 +151,7 @@ def main():
                 "south", "area integral"),
             **nc_var_attrs_int_s},
         nc_title_str=nc_title_str_int,
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

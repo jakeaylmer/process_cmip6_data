@@ -1,3 +1,12 @@
+"""Calculate ocean heat transport from the net downward heat
+flux into the ocean (hfds) and vertically-integrated ocean heat
+content tendency (opottemptend_zint or ocontempttend_zint).
+Data for the yearly-averaged hfds and o*temptend_zint 2D fields
+should already be saved; need to run save_areacello.py,
+save_hfds_yearly_field.py, and
+save_opottemptend_zint_yearly_field.py, first.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +14,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = "oht_from_hfds_o{}temptend_" \
@@ -109,8 +117,7 @@ def main():
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
         "year_range"   : (yr_s, yr_e),
-        "nc_title_str" : nc_title_str
-    }
+        "nc_title_str" : nc_title_str}
     
     diag_name_kw["name"] = diag_name.format(ftype)
     diag_name_kw["space_methods"] = ""
@@ -133,10 +140,8 @@ def main():
         nc_field_attrs_s={
             "long_name": nc_long_name.format("south", ftype),
             **nc_var_attrs_s},
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

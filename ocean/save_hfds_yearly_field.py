@@ -1,3 +1,9 @@
+"""Save net heat flux into the ocean column (hfds) as a yearly-
+averaged field, from input monthly data. Need to run
+save_areacello.py first (as the coordinates are obtained from
+there).
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -70,8 +76,7 @@ def main():
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
         "nc_global_attrs": {"external_variables": "areacello"},
-        "nc_title_str": nc_title_str
-    }
+        "nc_title_str": nc_title_str}
     
     diag_name_kw = {"name": diag_name,
        "time_methods": nf.diag_nq_yearly}
@@ -83,9 +88,7 @@ def main():
         nf.diag_name(**diag_name_kw),
         nf.nc_var_name(hemi="", **nc_var_name_kw),
         nc_field_type=hfds.dtype, nc_field_attrs=nc_var_attrs,
-        **save_nc_kw
-    )
-
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

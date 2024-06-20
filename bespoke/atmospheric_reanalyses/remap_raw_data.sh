@@ -18,11 +18,11 @@ y1=1980
 y2=2023
 
 # Paths to raw and output data:
-rawDataDir="/storage/basic/cpom/gb919150"
+rawDataDir="/storage/research/cpom/gb919150"
 rawDataDir="${rawDataDir}/monthly_near_surface_air_temperature"
 rawDataDir="${rawDataDir}/${rean}_raw"
 
-outDataDir="/storage/basic/cpom/gb919150"
+outDataDir="/storage/research/cpom/gb919150"
 outDataDir="${outDataDir}/monthly_near_surface_air_temperature"
 outDataDir="${outDataDir}/${rean}"
 

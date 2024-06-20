@@ -1,3 +1,10 @@
+"""Calculate averages of various atmospheric vertical heat
+fluxes from yearly-averaged fields, between reference latitudes
+and the north or south pole. Data for the yearly-averaged fields
+should already be saved; need to run save_areacella.py and
+save_atm_flux_yearly_fields.py first. 
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +12,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Basic diagnostic name (details such as time averaging, zonal
 # mean, etc., and the corresponding netCDF variable name, are
@@ -62,8 +68,7 @@ def main():
     prsr = script_tools.default_cmd_argument_parser()
     prsr.add_argument("-a", "--approx", action="store_true",
         help="Do approximate version ("
-            + f"{nf.diag_nq_cell_center_approx}) anyway"
-    )
+            + f"{nf.diag_nq_cell_center_approx}) anyway")
     cmd = prsr.parse_args()
     
     yr_s, yr_e  = md.year_range[cmd.experiment][cmd.model]
@@ -86,33 +91,29 @@ def main():
     
     load_nc_kw = {
         "model_id": cmd.model,
-        "experiment_id": cmd.experiment
-    }
+        "experiment_id": cmd.experiment}
     
     save_nc_kw = {
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
-    }
+        "year_range"   : (yr_s, yr_e)}
     
     # Will need to set "name", "hemi", "other_methods"
     # in loop:
     diag_kw = {
         "time_methods" : nf.diag_nq_yearly,
-        "space_methods": nf.diag_nq_area_mean
-    }
+        "space_methods": nf.diag_nq_area_mean}
+    
     nc_var_kw = {
         "time_methods" : nf.nc_var_nq_yearly,
-        "space_methods": nf.nc_var_nq_area_mean
-    }
+        "space_methods": nf.nc_var_nq_area_mean}
     
     if np.ndim(lat) == 1:
         
         for dn, ln, sn, ts in zip(
                 diag_names, nc_long_names, nc_standard_names,
-                nc_title_strs
-            ):
+                nc_title_strs):
             
             # Diagnostic (ldn) and netCDF variable (lvn)
             # names to load:
@@ -173,8 +174,7 @@ def main():
                         "native-grid latitude bounds"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
                 nc_title_str=ts,
-                **save_nc_kw
-            )
+                **save_nc_kw)
             
             diag_kw["other_methods"] = nf.diag_nq_native_interp
             nc_var_kw["other_methods"] = \
@@ -198,8 +198,7 @@ def main():
                         + "ated to reference latitudes"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
                 nc_title_str=ts,
-                **save_nc_kw
-            )
+                **save_nc_kw)
     
     if np.ndim(lat) != 1 or cmd.approx:
         
@@ -273,10 +272,8 @@ def main():
                         "center latitudes"),
                     **nc_var_attrs_s, **extra_nc_var_attrs},
                 nc_title_str=ts,
-                **save_nc_kw
-            )
+                **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

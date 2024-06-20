@@ -1,3 +1,9 @@
+"""Calculate atmospheric heat transport (AHT) from the net heat
+flux into the atmospheric column. Data for the latter should 
+already be saved; need to run save_areacella.py and
+save_atm_flux_yearly_fields.py first.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +11,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Basic diagnostic name (details such as time averaging, zonal
 # mean, etc., and the corresponding netCDF variable name, are
@@ -39,13 +44,13 @@ nc_var_attrs_s["cell_methods"] = (f"{nf.nc_time_name}: "
 # not be completely accurate/detailed here):
 nc_title_str = "atmospheric heat transport"
 
+
 def main():
     
     prsr = script_tools.default_cmd_argument_parser()
     prsr.add_argument("-a", "--approx", action="store_true",
         help="Do approximate version ("
-            + f"{nf.diag_nq_cell_center_approx}) anyway"
-    )
+            + f"{nf.diag_nq_cell_center_approx}) anyway")
     cmd = prsr.parse_args()
     
     yr_s, yr_e  = md.year_range[cmd.experiment][cmd.model]
@@ -69,8 +74,7 @@ def main():
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
         "year_range"   : (yr_s, yr_e),
-        "nc_title_str" : nc_title_str
-    }
+        "nc_title_str" : nc_title_str}
     
     # Will need to add "hemi" and "other_methods" kw to these:
     diag_kw = {"name": diag_name,
@@ -117,8 +121,7 @@ def main():
                 "long_name": nc_long_name.format("south",
                     "native-grid latitude bounds"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
+            **save_nc_kw)
         
         diag_kw["other_methods"] = nf.diag_nq_native_interp
         nc_var_kw["other_methods"] = nf.nc_var_nq_native_interp
@@ -138,8 +141,7 @@ def main():
                     "native-grid latitude bounds, interpolated "
                     + "to reference latitudes"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
+            **save_nc_kw)
         
     
     if np.ndim(lat) != 1 or cmd.approx:
@@ -184,10 +186,8 @@ def main():
                     "reference latitudes based on cell-center "
                     + "latitudes"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
-    
+            **save_nc_kw)    
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

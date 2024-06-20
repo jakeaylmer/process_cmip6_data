@@ -1,3 +1,9 @@
+"""Calculate ocean heat transport convergence (OHTC) from the
+vertically-integrated components of ocean heat flux hfx and hfy.
+This is currently only implemented for models with a C-grid
+ocean (e.g., NEMO).
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -6,8 +12,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 diag_name   = "ohtc_from_hfx_hfy"
 nc_var_name = "ohtc"
@@ -18,9 +23,7 @@ nc_var_attrs = {
     "long_name"    : "Ocean heat transport convergence (OHTC) "
                      + "computed on the native grid from hfx "
                      + "and hfy",
-    "units"        : nf.field_units["heatflux"]
-}
-
+    "units"        : nf.field_units["heatflux"]}
 
 # Short description added to netCDF "title" attribute (need
 # not be completely accurate/detailed here):
@@ -28,7 +31,16 @@ nc_title_str = "ocean heat transport convergence"
 
 
 def calc_ohtc_C_grid(hfx, hfy, areacello):
-    """"""
+    """Calculate the ocean heat transport convergnce (OHTC) from
+    input native grid, vertically-integrated heat flux
+    components hfx and hfy [arrays of shape (nt, ny, nx)], and
+    ocean grid cell areas areacello (array of shape (ny, nx)].
+    
+    This assumes a C-grid and uses Gauss'/divergence theorem
+    to compute the divergence (= minus convergence) at each grid
+    cell. Longitude 'wrapping' is not currently accounted for so
+    this method remains to be an approximation (but a good one).
+    """
     
     # Set missing to 0 for calculation:
     hfx = np.where(np.isnan(hfx), 0.0, hfx)
@@ -38,6 +50,8 @@ def calc_ohtc_C_grid(hfx, hfy, areacello):
     # all signs, which can be done at the end):
     ohtd = np.zeros(np.shape(hfx)).astype(np.float64)
     
+    # This is possibly related to the "halo" cells (see NEMO
+    # documentation):
     nbl = 1  # number of x-border cells, left hand side
     nbr = 1  # number of x-border cells, right hand side
     nbt = 2  # number of y-border cells, top
@@ -53,10 +67,6 @@ def calc_ohtc_C_grid(hfx, hfy, areacello):
         hfx[:,1:-nbt,nbl] - hfx[:,1:-nbt,-nbr-1] \
         + hfy[:,1:-nbt,nbl] - hfy[:,:-1-nbt,nbl]
     
-    # Wrap around at north pole; grid cells are in two halfs
-    # horizontally (NEMO grid only):
-    
-    
     # Determine grid-cell mean ohtd
     # (follows from Gauss' theorem):
     ohtd /= areacello[np.newaxis,:,:]
@@ -65,15 +75,15 @@ def calc_ohtc_C_grid(hfx, hfy, areacello):
 
 
 def process_member(member_id, lon, lat, areacello,
-        model_id='CanESM5', experiment_id='historical'
-    ):
-    """"""
+        model_id="CanESM5", experiment_id="historical"):
+    """Load raw data (the vertically-integrated heat transport
+    components hfx and hfy), calculate the ocean heat transport
+    convergence (OHTC), annually average it, and return, for
+    one ensemble member of specified model and experiment.
+    """
     
-    kw = {
-        "member_id": member_id,
-        "model_id": model_id,
-        "experiment_id": experiment_id
-    }
+    kw = {"member_id": member_id, "model_id": model_id,
+          "experiment_id": experiment_id}
     
     _, _, hfx, = lrd.field_2D("hfx", **kw)
     _, _, hfy, = lrd.field_2D("hfy", **kw)
@@ -101,13 +111,8 @@ def main():
     lon, lat, areacello = lpd.areacello(cmd.model)
     lon_bnds, lat_bnds  = lpd.bndscello(cmd.model)
     
-    pm_kw = {
-        'lon': lon,
-        'lat': lat,
-        'areacello': areacello,
-        'model_id': cmd.model,
-        'experiment_id': cmd.experiment
-    }
+    pm_kw = {"lon": lon, "lat": lat, "areacello": areacello,
+        "model_id": cmd.model, "experiment_id": cmd.experiment}
     
     ohtc = np.zeros((nt, n_ens, ny, nx), dtype=np.float64)
     
@@ -130,8 +135,7 @@ def main():
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
         "nc_global_attrs": {"external_variables": "areacello"},
-        "nc_title_str": nc_title_str
-    }
+        "nc_title_str": nc_title_str}
     
     diag_name_kw = {"name": diag_name,
         "time_methods": nf.diag_nq_yearly}
@@ -142,9 +146,7 @@ def main():
     nf.save_yearly(ohtc, nf.diag_name(**diag_name_kw),
         nf.nc_var_name(hemi="", **nc_var_name_kw),
         nc_field_type=ohtc.dtype, nc_field_attrs=nc_var_attrs,
-        **save_nc_kw
-    )
-
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

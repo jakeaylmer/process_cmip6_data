@@ -1,10 +1,15 @@
+"""Quality control plot: sea ice-edge latitude. Plots zonal mean
+annual mean time series and climatological seasonal cyclone for
+each hemisphere, comparing multiple interpolation methods and/or
+resolutions.
+"""
+
 import numpy as np
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -153,7 +158,6 @@ def main():
             methods[0], f"*deg_{cmd.remapmethod}"),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

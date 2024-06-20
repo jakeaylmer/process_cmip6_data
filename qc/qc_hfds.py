@@ -1,8 +1,12 @@
+"""Quality control plot: net heat flux into ocean surface
+integrated between reference latitudes and the pole. Plots time
+series for specified reference latitude.
+"""
+
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -14,8 +18,7 @@ def main():
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
         "lat_eval": cmd.latitude,
-        "select_diag": cmd.seldiag
-    }
+        "select_diag": cmd.seldiag}
     
     data_paths = ["", ""]
     
@@ -47,8 +50,7 @@ def main():
         "diagnostic_description"      : full_diag_names[0],
         "plot_type"                   : "time_series_"
                                         + f"{lat_eval_n:.0f}n_"
-                                        + f"{-lat_eval_s:.0f}s"
-    }
+                                        + f"{-lat_eval_s:.0f}s"}
     
     fig1, ax1 = qc.start_figure(**descr_kw)
     
@@ -93,7 +95,6 @@ def main():
         qc.finish_figures([fig], str(data_paths[j]),
             savefig=cmd.savefigs,
             subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

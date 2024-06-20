@@ -25,8 +25,11 @@ def ncdump(nc_fid, indent_size=4):
     
     Parameters
     ----------
-    ncfid : str or pathlib.Path instance
-        Absolute path to a netCDF file
+    nc_fid : str or pathlib.Path instance
+        Absolute path to a netCDF file.
+    
+    indent_size : int, optional, default = 4
+        Number of " " to indent sub-sections of output by.
     
     """
     
@@ -120,7 +123,7 @@ def nc_get_arrays(ncfiles, coordinate_vars=[],
     from a set of NetCDF data files as NumPy arrays.
     
     Variables specified in coordinate_vars are loaded from
-    one file only and not concantenated, while those specified
+    one file only and not concatenated, while those specified
     in diagnostic_vars are loaded from all files and are
     concatenated (along axis=0 by default).
     

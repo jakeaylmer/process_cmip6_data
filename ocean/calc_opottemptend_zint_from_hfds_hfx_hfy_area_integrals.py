@@ -1,3 +1,12 @@
+"""Calculate spatial integrals of ocean heat content tendency
+between reference latitudes and the north or south pole, from
+that already computed for the net downward heat flux into the
+ocean (hfds) and the northward ocean heat transport (OHT) data
+computed from hfx and hfy. Data for the yearly-averaged and
+area-integrated hfds, and OHT, should already be processed and
+saved.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +14,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = ("o{}temptend" + nf.diag_nq_vertical_integral
@@ -122,8 +130,7 @@ def main():
     
     load_kw = {
         "model_id": cmd.model,
-        "experiment_id":cmd.experiment
-    }
+        "experiment_id":cmd.experiment}
     
     opottemptend_zint_hint_n, opottemptend_zint_mean_n = \
         diags.integrate_horizontally_multi_members(
@@ -144,8 +151,7 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
-    }
+        "year_range"   : (yr_s, yr_e)}
     
     print("Saving to NetCDF...")
     
@@ -181,8 +187,7 @@ def main():
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_mean_s},
         nc_title_str=nc_title_str_mean,
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_name_kw["space_methods"] = nf.diag_nq_area_integral
     nc_var_name_kw["space_methods"] = nf.nc_var_nq_area_integral
@@ -209,10 +214,8 @@ def main():
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_int_s},
         nc_title_str=nc_title_str_int,
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

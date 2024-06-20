@@ -1,3 +1,9 @@
+"""Save northward ocean heat transport data computed as a direct
+model output (hfbasin) as a yearly-averaged time series, from
+input monthly data. Need to run save_areacello.py
+first (as the coordinates are obtained from there).
+"""
+
 from pathlib import Path
 import numpy as np
 
@@ -34,16 +40,35 @@ nc_title_str = "ocean heat transport"
 
 
 def process_member(member_id, model_id, experiment_id):
-    """"""
+    """Load data for hfbasin for one member, model, and
+    experiment. The hfbasin data is somewhat unique to the other
+    input fields in that it has a "basin" (domain of zonal
+    integration) dimension that is not consistent among models
+    with regards to which is global (all we want here) and the 
+    name of the latitude variable. This information is coded in
+    the metadata module, dictionary hfbasin_metadata, a
+    dictionary where the keys are the model_ids and the values
+    are lists [<int; global basin index>, <str; latitude
+    variable name].
+    
+    Returns
+    -------
+    lat : 1D array of float, shape (nlat,)
+        Latitude coordinates.
+    
+    hfbasin : 2D array of float, shape (nyears, nlat)
+        Yearly-averaged time series of global hfbasin as a
+        function of time (year) and latitude.
+    
+    """
     data_dir = Path(md.dir_raw_nc_data, model_id, experiment_id,
                     "hfbasin")
     
     data_files_in = sorted([str(x) for x in data_dir.glob(
-        f'hfbasin*{model_id}*{experiment_id}*{member_id}*.nc')
-    ])
+        f"hfbasin*{model_id}*{experiment_id}*{member_id}*.nc")])
     
     lat, hfbasin = utils.nc_get_arrays(data_files_in,
-        [md.hfbasin_metadata[model_id][1]], ['hfbasin'])
+        [md.hfbasin_metadata[model_id][1]], ["hfbasin"])
     
     lat = np.squeeze(lat)
     hfbasin = np.squeeze(hfbasin)
@@ -81,8 +106,7 @@ def main():
     
     pm_kw = {
         'model_id': cmd.model,
-        'experiment_id': cmd.experiment
-    }
+        'experiment_id': cmd.experiment}
     
     # Process first member to get n_lat:
     print(f"Processing member: {ens_members[0]} "
@@ -103,7 +127,7 @@ def main():
             hfbasin[:,m,:] = process_member(ens_members[m],
                 **pm_kw)[1]
     
-    hfbasin /= 1.0E15
+    hfbasin /= 1.0E15  # in PW
     
     hfbasin_interp = diags.interpolate_to_ref_latitudes(
         lat, hfbasin, ref_lats)
@@ -117,8 +141,7 @@ def main():
         "member_ids": ens_members,
         "experiment_id": cmd.experiment,
         "year_range": (yr_s, yr_e),
-        "nc_title_str": nc_title_str
-    }
+        "nc_title_str": nc_title_str}
     
     diag_kw = {"name": diag_name,
         "time_methods": nf.diag_nq_yearly,
@@ -136,8 +159,7 @@ def main():
         nc_field_attrs={
             "long_name": nc_long_name.format(""),
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw["other_methods"] = nf.diag_nq_native_interp
     nc_var_name_kw["other_methods"] = nf.nc_var_nq_native_interp
@@ -151,10 +173,8 @@ def main():
                 ", interpolated to reference latitudes"
             ),
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

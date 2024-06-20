@@ -1,10 +1,12 @@
-import numpy as np
+"""Quality control plot: near surface air temperature, annual
+averages integrated between reference latitudes and the pole.
+Plots a time series for a specified reference latitude.
+"""
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -18,8 +20,7 @@ def main():
         "model_id": cmd.model,
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
-        "lat_eval": cmd.latitude
-    }
+        "lat_eval": cmd.latitude}
     
     # Load from aliases (defined in api._diagnostic_definitions)
     tas_n, tas_s, year, r_vals, ripf, lat_eval_n, lat_eval_s, \
@@ -44,8 +45,7 @@ def main():
         "ensemble_members_description": ens_label,
         "diagnostic_description"      : cmd.diagnostic,
         "plot_type"                   : "time_series_"
-            + f"{lat_eval_n:.0f}n_{abs(lat_eval_s):.0f}s"
-    }
+            + f"{lat_eval_n:.0f}n_{abs(lat_eval_s):.0f}s"}
     
     fig1, ax1 = qc.start_figure(**descr_kw)
     
@@ -77,7 +77,6 @@ def main():
     qc.finish_figures([fig1], str(data_path),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

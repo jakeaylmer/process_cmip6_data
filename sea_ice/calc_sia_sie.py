@@ -1,3 +1,10 @@
+"""Calculate monthly and yearly-mean sea ice area (sia) and sea
+ice extent (sie) from sea ice concentration monthly data.
+Assumes that sea ice concentration is on the native ocean grid,
+and that areacello has been saved in standard format; need to
+run ocean/save_areacello.py first.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -6,8 +13,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Basic diagnostic names (details such as time averaging, zonal
 # mean, etc., and the corresponding netCDF variable name, are
@@ -26,14 +32,12 @@ nc_var_extent_attrs = {
     "standard_name": "sea_ice_extent",
     "cell_methods" : f"{nf.nc_time_name}: mean",
     "coordinates"  : nf.nc_siconc_threshold_name,  # scalar coordinate variable
-    "units"        : nf.field_units["seaiceextent"]
-}
+    "units"        : nf.field_units["seaiceextent"]}
 
 nc_var_area_attrs = {
     "standard_name": "sea_ice_area",
     "cell_methods" : f"{nf.nc_time_name}: mean",
-    "units"        : nf.field_units["seaicearea"]
-}
+    "units"        : nf.field_units["seaicearea"]}
 
 
 def main():
@@ -53,8 +57,7 @@ def main():
     
     load_kw = {
         "model_id": cmd.model,
-        "experiment_id": cmd.experiment
-    }
+        "experiment_id": cmd.experiment}
     
     sia_n = np.zeros((nt*12, n_ens)).astype(np.float64)
     sia_s = np.zeros((nt*12, n_ens)).astype(np.float64)
@@ -112,8 +115,7 @@ def main():
         "model_id": cmd.model,
         "member_ids": ens_members,
         "experiment_id": cmd.experiment,
-        "year_range": (yr_s, yr_e)
-    }
+        "year_range": (yr_s, yr_e)}
     
     sie_coord_var_attrs = {
         "name": nf.nc_siconc_threshold_name,
@@ -121,19 +123,16 @@ def main():
         "value": cmd.threshold,
         "attrs": {
             "standard_name": "sea_ice_area_fraction",
-            "units": "1"
+            "units": "1"}
         }
-    }
     
     diag_kw = {
         "name": diag_area_name,
-        "time_methods": nf.diag_nq_monthly
-    }
+        "time_methods": nf.diag_nq_monthly}
     
     nc_var_kw = {
         "name": diag_area_name,
-        "time_methods": nf.nc_var_nq_monthly
-    }
+        "time_methods": nf.nc_var_nq_monthly}
     
     nf.save_time_series_by_hemi(sia_n, sia_s,
         nf.diag_name(**diag_kw),
@@ -148,8 +147,7 @@ def main():
             **nc_var_area_attrs},
         monthly=True,
         nc_title_str="sea ice area",
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw["time_methods"] = nf.diag_nq_yearly
     nc_var_kw["time_methods"] = nf.nc_var_nq_yearly
@@ -168,18 +166,15 @@ def main():
                 ", annually averaged"),
             **nc_var_area_attrs},
         nc_title_str="sea ice area",
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw = {
         "name": diag_extent_name,
-        "time_methods": nf.diag_nq_monthly
-    }
+        "time_methods": nf.diag_nq_monthly}
     
     nc_var_kw = {
         "name": diag_extent_name,
-        "time_methods": nf.nc_var_nq_monthly
-    }
+        "time_methods": nf.nc_var_nq_monthly}
     
     nf.save_time_series_by_hemi(sie_n, sie_s,
         nf.diag_name(**diag_kw),
@@ -195,8 +190,7 @@ def main():
         scalar_coord_var_n_kw=sie_coord_var_attrs,
         monthly=True,
         nc_title_str="sea ice extent",
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw["time_methods"] = nf.diag_nq_yearly
     nc_var_kw["time_methods"] = nf.nc_var_nq_yearly
@@ -216,10 +210,7 @@ def main():
             **nc_var_extent_attrs},
         scalar_coord_var_n_kw=sie_coord_var_attrs,
         nc_title_str="sea ice extent",
-        **save_nc_kw
-    )
-    
-
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

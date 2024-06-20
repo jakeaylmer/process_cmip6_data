@@ -1,8 +1,14 @@
+"""Quality control plot: plots terms of the ocean heat budget
+at a specified reference latitude (ocean heat transport at that
+latitude, net downward heat flux and heat content tendency
+integrated poleward of that latitude), and a plot of the
+residual to check budget is (approximately) closed.
+"""
+
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -14,8 +20,7 @@ def main():
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
         "lat_eval": cmd.latitude,
-        "select_diag": cmd.seldiag
-    }
+        "select_diag": cmd.seldiag}
     
     data_paths = ["", "", ""]
     
@@ -54,8 +59,7 @@ def main():
         "ensemble_members_description": ens_label,
         "diagnostic_description"      : "budget",
         "plot_type"                   : "time_series_"
-                                        + f"{lat_n_oht:.0f}n"
-    }
+                                        + f"{lat_n_oht:.0f}n"}
     
     fig1, ax1 = qc.start_figure(**descr_kw)
     descr_kw["plot_type"] = f"time_series_{-lat_s_oht:.0f}s"
@@ -132,7 +136,6 @@ def main():
         "\n".join([str(x) for x in data_paths]),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.22})
-
 
 
 if __name__ == "__main__":

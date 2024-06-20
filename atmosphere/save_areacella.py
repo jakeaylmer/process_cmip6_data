@@ -1,3 +1,7 @@
+"""Save atmosphere grid cell area (areacella) in a standard
+format, to be loaded and used in other processing scripts.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,14 +9,12 @@ from process_cmip6_data.src import (
     load_raw_data,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 nc_var_attrs = {
     "standard_name": "cell_area",
     "long_name": "Atmosphere native-grid cell area",
-    "units": nf.field_units["cellarea"]
-}
+    "units": nf.field_units["cellarea"]}
 
 
 def main():
@@ -61,12 +63,10 @@ def main():
             + f"ensemble member ("
             + f"{nf.nc_file_attrs_member_name}).",
             "title": f"Atmosphere grid data for CMIP6 model: "
-                + cmd.model
-        }
+                + cmd.model}
     }
     
     nf.save_areacell(areacella, **save_nc_kw)
-
 
 
 if __name__ == "__main__":

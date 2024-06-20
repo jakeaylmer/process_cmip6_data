@@ -1,10 +1,14 @@
+"""Quality control plot: sea ice area and extent. Plots annual
+time series and monthly climatology over specified periods for
+each.
+"""
+
 import numpy as np
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -114,7 +118,6 @@ def main():
         str(data_paths[1]).replace("sia", "si?"),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

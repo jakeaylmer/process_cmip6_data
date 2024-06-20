@@ -1,3 +1,11 @@
+"""Calculate spatial integrals of ocean heat content tendency
+between reference latitudes and the north or south pole, from
+that already computed for the net downward heat flux into the
+ocean (hfds) and native northward ocean heat transport data
+(hfbasin). Data for the yearly-averaged and area-integrated
+hfds, and hfbasin, should already be processed and saved.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +13,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = ("o{}temptend" + nf.diag_nq_vertical_integral
@@ -121,8 +128,7 @@ def main():
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
         "year_range"   : (yr_s, yr_e),
-        "nc_title_str" : nc_title_str
-    }
+        "nc_title_str" : nc_title_str}
     
     print("Saving to NetCDF...")
     
@@ -157,10 +163,8 @@ def main():
                 "south", ftype),
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_s},
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,4 +1,8 @@
-import numpy as np
+"""Quality control plot: ocean heat content tendency, integrated
+vertically and between reference latitudes and the pole. Plots
+time series for a specified reference latitude for different
+methods, and scatter plots comparing each method directly. 
+"""
 
 from process_cmip6_data.src import metadata as md
 from process_cmip6_data.src import netcdf as nf
@@ -50,8 +54,7 @@ def main():
         "model_id": cmd.model,
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
-        "lat_eval": cmd.latitude
-    }
+        "lat_eval": cmd.latitude}
     
     # Load from aliases (defined in api._diagnostic_definitions)
     dhdt_resid_hfbasin_n, dhdt_resid_hfbasin_s, year, r_vals, \
@@ -88,8 +91,7 @@ def main():
         "diagnostic_description"      :
             f"o{ftype}temptend{units}_compare_methods",
         "plot_type"                   : "time_series_"
-                                        + f"{lat_eval_n:.0f}n"
-    }
+                                        + f"{lat_eval_n:.0f}n"}
     
     # Figs. 1-2: time series, showing full yearly data and low-
     # pass (moving-average) filtered data for each method
@@ -122,22 +124,19 @@ def main():
             [ydata_n, ydata_s],
             [ydata_ma_n, ydata_ma_s],
             [lat_eval_n, lat_eval_s],
-            ["n", "s"]
-        ):
+            ["n", "s"]):
         
         # Full time series:
         qc.plot_data(ax, xdata=year,
             ydata=ydata, ens_index=e, ens_label=ens_label,
             labels=[None]*3, colors=colors, linewidths=0.5,
-            ripf_labels=ripf
-        )
+            ripf_labels=ripf)
         
         # cmd.movavg filtered time series:
         qc.plot_data(ax, xdata=year_ma,
             ydata=ydata_ma, ens_index=e, ens_label=ens_label,
             labels=labels, colors=colors, linewidths=1.5,
-            ripf_labels=ripf
-        )
+            ripf_labels=ripf)
         
         ax.set_title(f"{cmd.model} {cmd.experiment} "
             + ("" if cmd.x2 == "none" else f"+ {cmd.x2}") + ", "
@@ -170,8 +169,7 @@ def main():
     
     for axs, datasets, lat_eval, hemi in zip(
             [axs3, axs4], [ydata_n, ydata_s],
-            [lat_eval_n, lat_eval_s], ["n", "s"]
-        ):
+            [lat_eval_n, lat_eval_s], ["n", "s"]):
         
         if cmd.experiment == "piControl":
             datasets = qc.contiguous_timestep_averages(
@@ -222,12 +220,9 @@ def main():
            + f"{cmd.yravg1[1]} averages)"),
         fontsize=10.5)
     
-    
     qc.finish_figures([fig1, fig2, fig3, fig4],
         "\n".join(data_paths), savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.23})
-    
-
 
 
 if __name__ == "__main__":

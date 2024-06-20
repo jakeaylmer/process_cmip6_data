@@ -1,10 +1,13 @@
-import numpy as np
+"""Quality control plot: atmospheric heat transport (AHT). Plots
+a time series at a specified latitude (north and south) and a
+heat transport profile (i.e., specified time average as a
+function of latitude).
+"""
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -18,8 +21,7 @@ def main():
         "model_id": cmd.model,
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
-        "lat_eval": None
-    }
+        "lat_eval": None}
     
     # Load from aliases (defined in api._diagnostic_definitions)
     aht_n, aht_s, year, r_vals, ripf, lat_n, lat_s, data_path \
@@ -109,7 +111,6 @@ def main():
     qc.finish_figures([fig1, fig2], str(data_path),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

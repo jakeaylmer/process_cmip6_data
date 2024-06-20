@@ -1,3 +1,9 @@
+"""Calculate averages of near surface air temperature between
+reference latitudes and the north or south pole. Data for the
+yearly-averaged temperature field should already be saved; need
+to run save_areacella.py and save_tas_yearly_field.py first. 
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -72,8 +78,7 @@ def main():
         "diagnostic_id": nf.diag_name(**diag_kw),
         "nc_field_name": nf.nc_var_name(**nc_var_kw),
         "model_id"     : cmd.model,
-        "experiment_id": cmd.experiment
-    }
+        "experiment_id": cmd.experiment}
     
     tas = lpd.field_2D(**load_kw)[-1]
     
@@ -82,8 +87,7 @@ def main():
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
         "year_range"   : (yr_s, yr_e),
-        "nc_title_str" : nc_title_str
-    }
+        "nc_title_str" : nc_title_str}
     
     diag_kw["space_methods"] = nf.diag_nq_area_mean
     nc_var_kw["space_methods"] = nf.nc_var_nq_area_mean
@@ -127,8 +131,7 @@ def main():
                 "long_name": nc_long_name.format("south",
                     "native-grid latitude bounds"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
+            **save_nc_kw)
         
         diag_kw["other_methods"] = nf.diag_nq_native_interp
         nc_var_kw["other_methods"] = nf.nc_var_nq_native_interp
@@ -151,8 +154,7 @@ def main():
                     "native-grid latitude bounds, interpolated "
                     + "to reference latitudes"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
+            **save_nc_kw)
         
     
     if np.ndim(lat) != 1 or cmd.approx:
@@ -203,9 +205,7 @@ def main():
                     "reference latitudes based on cell-center "
                     + "latitudes"),
                 **nc_var_attrs_s},
-            **save_nc_kw
-        )
-
+            **save_nc_kw)
 
 
 if __name__ == "__main__":

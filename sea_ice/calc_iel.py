@@ -1,3 +1,17 @@
+"""Calculate monthly and yearly-mean, zonal and zonally-averaged
+sea ice-edge latitudes from sea ice concentration. There is a
+companion bash script, calc_iel.sh, that first interpolates sea
+ice concentration to a regular longitude-latitude grid of
+appropriate resolution, which this python script and the
+calculation of the ice edge requires. That bash script should be
+run, not this script directly.
+
+The ice-edge latitude is calculated using an external python
+package, "ice_edge_latitude" (doi:10.5281/zenodo.5494523) that
+must be available on the python PATH for this to work. The
+default settings of that procedure are used.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src.diagnostics import (
@@ -7,8 +21,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 from ice_edge_latitude.diagnostics import ice_edge_latitude as iel
 
@@ -24,15 +37,13 @@ nc_var_attrs = {
     "cell_methods": f"{nf.nc_time_name}: mean {nf.nc_lon_1d_name}: mean",
     "coordinates": f"{nf.nc_siconc_threshold_name} {nf.nc_lon_1d_name}",
     "standard_name": "latitude",
-    "units": nf.field_units["seaiceedge"]
-}
+    "units": nf.field_units["seaiceedge"]}
 
 nc_var_zm_attrs = {
     "cell_methods": f"{nf.nc_time_name}: mean",
     "coordinates": nf.nc_siconc_threshold_name,  # scalar coordinate variable
     "standard_name": "latitude",
-    "units"      : nf.field_units["seaiceedge"]
-}
+    "units"      : nf.field_units["seaiceedge"]}
 
 # Interpolation descriptions
 # (these are followed by " interpolation"):
@@ -41,8 +52,7 @@ remap_methods = {
     "con" : "first-order conservative",
     "con2": "second-order conservative",
     "dis" : "distance-weighted",
-    "nn"  : "nearest-neighbour"
-}
+    "nn"  : "nearest-neighbour"}
 
 
 def main():
@@ -74,8 +84,7 @@ def main():
         "experiment_id": cmd.experiment,
         "remapped_data_dir": cmd.datadir,
         "remap_method": cmd.remapmethod,
-        "remap_res": cmd.gridresolution
-    }
+        "remap_res": cmd.gridresolution}
     
     # Ice edge as a function of longitude (determine number of
     # longitudes from the interpolated grid resolution):
@@ -114,8 +123,7 @@ def main():
         "model_id": cmd.model,
         "member_ids": ens_members,
         "experiment_id": cmd.experiment,
-        "year_range": (yr_s, yr_e)
-    }
+        "year_range": (yr_s, yr_e)}
     
     scalar_coord_var_attrs = {
         "name": nf.nc_siconc_threshold_name,
@@ -123,8 +131,7 @@ def main():
         "value": cmd.threshold,
         "attrs": {
             "standard_name": "sea_ice_area_fraction",
-            "units": "1"
-        }
+            "units": "1"}
     }
     
     # Applies to full and zonal-mean data:
@@ -150,8 +157,7 @@ def main():
     diag_kw = {
         "name": diag_name,
         "time_methods": nf.diag_nq_monthly,
-        "other_methods": other_methods
-    }
+        "other_methods": other_methods}
     
     # Currently set empty "" anyway:
     other_methods = getattr(nf, "nc_var_nq_"
@@ -160,8 +166,7 @@ def main():
     nc_var_kw = {
         "name": diag_name,
         "time_methods": nf.nc_var_nq_monthly,
-        "other_methods": other_methods
-    }
+        "other_methods": other_methods}
     
     
     # Ice edge as a function of longitude:
@@ -181,8 +186,7 @@ def main():
             **nc_var_attrs},
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
         nc_title_str="sea ice-edge latitude",
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw["space_methods"] = nf.diag_nq_zonal_mean
     nc_var_kw["space_methods"] = nf.nc_var_nq_zonal_mean
@@ -203,8 +207,7 @@ def main():
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
         monthly=True,
         nc_title_str="sea ice-edge latitude zonal mean",
-        **save_nc_kw
-    )
+        **save_nc_kw)
     
     diag_kw["time_methods"] = nf.diag_nq_yearly
     nc_var_kw["time_methods"] = nf.nc_var_nq_yearly
@@ -225,9 +228,7 @@ def main():
         scalar_coord_var_n_kw=scalar_coord_var_attrs,
         monthly=False,
         nc_title_str="sea ice-edge latitude zonal mean",
-        **save_nc_kw
-    )
-
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

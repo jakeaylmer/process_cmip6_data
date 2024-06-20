@@ -233,15 +233,14 @@ defined_diagnostics = [alias_diags[k] for k in defined_aliases]
 
 
 def print_defined_diagnostics():
-    
+    """Prints a table of all defined aliases for all defined
+    diagnostics (there is a script in the "widgets" directory
+    which uses this).
+    """
     headers = ["Keyword", "Alias", "Diagnostic name",
                "Coordinates", "Variables"]
     
     rows = []
-    
-    # Group aliases per keyword (keep track of current keyword,
-    # which is initially not known):
-    current_keyword = "something_random_definitely_not_keyword"
     
     for keyword in defined_keywords:
         

@@ -1,3 +1,7 @@
+"""Save ocean grid cell area (areacello) in a standard format,
+to be loaded and used in other processing scripts.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -9,8 +13,7 @@ from process_cmip6_data.src import (
 nc_var_attrs = {
     "standard_name": "cell_area",
     "long_name": "Ocean native-grid cell area",
-    "units": nf.field_units["cellarea"]
-}
+    "units": nf.field_units["cellarea"]}
 
 
 def main():
@@ -52,8 +55,7 @@ def main():
             + f"ensemble member ("
             + f"{nf.nc_file_attrs_member_name}).",
             "title": f"Ocean grid data for CMIP6 model: "
-                + cmd.model
-        }
+                + cmd.model}
     }
     
     nf.save_areacell(areacello, **save_nc_kw)

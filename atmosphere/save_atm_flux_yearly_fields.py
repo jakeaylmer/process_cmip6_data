@@ -1,3 +1,9 @@
+"""Save various atmospheric vertical heat fluxes and the
+atmospheric heat transport converence (AHTC) as yearly-averaged
+fields, from input monthly fields. Need to run save_areacella.py
+first (as the coordinates are obtained from there). 
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -26,8 +32,7 @@ var_name_ahtc = "ahtc"
 nc_var_attrs = {
     "units": nf.field_units["heatflux"],
     "cell_measures": "area: areacella",
-    "cell_methods": f"area: mean {nf.nc_time_name}: mean"
-}
+    "cell_methods": f"area: mean {nf.nc_time_name}: mean"}
 
 
 def main():
@@ -53,8 +58,7 @@ def main():
     
     load_kw = {
         "model_id"      : cmd.model,
-        "experiment_id" : cmd.experiment
-    }
+        "experiment_id" : cmd.experiment}
     
     # Raw data flux names:
     flux_names = ["hfls", "hfss", "rlds", "rlus", "rlut",
@@ -103,7 +107,6 @@ def main():
         fsw_surf[:,m,:,:] = (
             fluxes_m[flux_names.index("rsds")]
             - fluxes_m[flux_names.index("rsus")])
-        
     
     # ------------------------------------------------------- #
     
@@ -118,8 +121,7 @@ def main():
         "latitude": lat,
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
-        "nc_global_attrs": {"external_variables": "areacella"}
-    }
+        "nc_global_attrs": {"external_variables": "areacella"}}
     
     # Common properties for diagnostic and variable names
     # (just time here):

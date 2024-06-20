@@ -1,3 +1,11 @@
+"""Calculate spatial integrals of ocean heat content tendency
+between reference latitudes and the north or south pole.
+Data for the yearly-averaged and vertically-integrated ocean
+heat content tendency should already be saved; need to run
+save_areacello.py and save_opottemptend_zint_yearly_field.py
+first.
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -5,8 +13,7 @@ from process_cmip6_data.src import (
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = "o{}temptend"
@@ -48,6 +55,7 @@ nc_var_attrs_int_s["cell_methods"] = (
 nc_title_str = "ocean column heat content tendency polar-cap "
 nc_title_str_int = nc_title_str + "integrals"
 nc_title_str_mean = nc_title_str + "averages"
+
 
 def main():
     
@@ -110,8 +118,7 @@ def main():
         "model_id"     : cmd.model,
         "member_ids"   : ens_members,
         "experiment_id": cmd.experiment,
-        "year_range"   : (yr_s, yr_e)
-    }
+        "year_range"   : (yr_s, yr_e)}
     
     print("Saving to NetCDF...")
     
@@ -177,8 +184,7 @@ def main():
             "standard_name": nc_standard_name.format(ftype_long),
             **nc_var_attrs_int_s},
         nc_title_str=nc_title_str_mean,
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

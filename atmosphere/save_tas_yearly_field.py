@@ -1,3 +1,8 @@
+"""Save near surface air temperature (tas) as a yearly-averaged
+field, from input monthly data. Need to run save_areacella.py
+first (as the coordinates are obtained from there). 
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -22,8 +27,7 @@ nc_var_attrs = {
     "cell_methods" : f"area: mean {nf.nc_time_name}: mean",
     "long_name"    : "Near-surface air temperature, annually averaged",
     "standard_name": "air_temperature",
-    "units"        : nf.field_units["temperature"]
-}
+    "units"        : nf.field_units["temperature"]}
 
 
 def main():
@@ -44,8 +48,7 @@ def main():
     
     load_kw = {
         "model_id"     : cmd.model,
-        "experiment_id": cmd.experiment
-    }
+        "experiment_id": cmd.experiment}
     
     for m in range(n_ens):
         
@@ -83,18 +86,15 @@ def main():
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
         "nc_global_attrs": {"external_variables": "areacella"},
-        "nc_title_str": nc_title_str
-    }
+        "nc_title_str": nc_title_str}
     
     diag_kw = {
         "name"        : diag_name,
-        "time_methods": nf.diag_nq_yearly
-    }
+        "time_methods": nf.diag_nq_yearly}
     
     nc_var_kw = {
         "name"        : diag_name,
-        "time_methods": nf.nc_var_nq_yearly
-    }
+        "time_methods": nf.nc_var_nq_yearly}
     
     nf.save_yearly(tas,
         nf.diag_name(**diag_kw),

@@ -1,10 +1,15 @@
+"""Calculate ocean heat transport (OHT) from OHT convergence
+(OHTC). Data for yearly-averaged OHTC 2D field should already be
+saved; need to run save_areacello.py and
+calc_oht_from_ohtc_from_hfx_hfy.py first.
+"""
+
 from process_cmip6_data.src import (
     diagnostics as diags,
     load_processed_data as lpd,
     metadata as md,
     netcdf as nf,
-    script_tools
-)
+    script_tools)
 
 # Diagnostic names:
 diag_name = "oht_from_hfx_hfy"
@@ -93,7 +98,6 @@ def main():
             "long_name": nc_long_name.format("south"),
             **nc_var_attrs_s},
         nc_title_str=nc_title_str)
-
 
 
 if __name__ == "__main__":

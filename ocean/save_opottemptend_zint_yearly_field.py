@@ -1,3 +1,9 @@
+"""Save tendency of ocean column heat content, vertically
+integrated and annually-averaged field, from input monthly data
+on ocean model levels. Need to run save_areacello.py first (as
+the coordinates are obtained from there).
+"""
+
 import numpy as np
 
 from process_cmip6_data.src import (
@@ -8,7 +14,11 @@ from process_cmip6_data.src import (
     netcdf as nf,
     script_tools)
 
-diag_name   = "o{}temptend"
+# The following have format string placeholders {} because the
+# same script is used for either potential temperature or
+# conservative temperature tendencies.
+
+diag_name   = "o{}temptend"  # either "pot" or "con"
 nc_var_name = "o{}temptend"
 
 nc_standard_name = ("tendency_of_sea_water_{}_temperature_"
@@ -52,8 +62,7 @@ def main():
     
     load_kw = {
         "model_id": cmd.model,
-        "experiment_id":cmd.experiment
-    }
+        "experiment_id":cmd.experiment}
     
     opottemptend_zint = np.zeros((nt, n_ens, ny, nx),
                                  dtype=np.float64)
@@ -93,8 +102,7 @@ def main():
         "longitude_bnds": lon_bnds,
         "latitude_bnds": lat_bnds,
         "nc_global_attrs": {"external_variables": "areacello"},
-        "nc_title_str": nc_title_str
-    }
+        "nc_title_str": nc_title_str}
     
     diag_name_kw = {"name": diag_name.format(ftype),
         "time_methods": nf.diag_nq_yearly,
@@ -112,8 +120,7 @@ def main():
             "standard_name": nc_standard_name.format(ftype_long),
             "long_name": nc_long_name.format(ftype_long, ftype),
             **nc_var_attrs},
-        **save_nc_kw
-    )
+        **save_nc_kw)
 
 
 if __name__ == "__main__":

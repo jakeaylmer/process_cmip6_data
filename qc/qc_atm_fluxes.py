@@ -1,10 +1,11 @@
-import numpy as np
+"""Quality control plot: atmospheric vertical heat fluxes. Plots
+time series of each term for a specified reference latitude.
+"""
 
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
 from process_cmip6_data.src import script_tools
-
 
 
 def main():
@@ -22,8 +23,7 @@ def main():
         "model_id": cmd.model,
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
-        "lat_eval": cmd.latitude
-    }
+        "lat_eval": cmd.latitude}
     
     for fn in f_star:
         
@@ -100,7 +100,6 @@ def main():
         str(data_path).replace(f_star[-1], "f_*"),
         savefig=cmd.savefigs,
         subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":

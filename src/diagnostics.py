@@ -11,7 +11,24 @@ npna = np.newaxis  # alias
 # ============================================================ #
 
 def estimate_lon_lat_bnds_1D(lon, lat):
-    """"""
+    """Get longitude and latitude cell bounds from input
+    longitude and latitude cell-centre coordinates assuming
+    independent lon/lat dimensions.
+    
+    
+    Parameters
+    ----------
+    lon, lat : arrays of float of shape (nlon,), (nlat,)
+        Longitude and latitude cell-center coordinates in
+        degrees_east and degrees_north respectively.
+    
+    
+    Returns
+    -------
+    lon_bnds, lat_bnds : arrays of shape (nlon, 2), (nlat, 2)
+        Longitude and latitude cell bounds.
+    
+    """
     
     lon_bnds = np.zeros((len(lon), 2), dtype=np.float64)
     lat_bnds = np.zeros((len(lat), 2), dtype=np.float64)

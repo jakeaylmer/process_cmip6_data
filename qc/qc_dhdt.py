@@ -1,3 +1,8 @@
+"""Quality control plot: ocean heat content tendency, integrated
+vertically and between reference latitudes and the pole. Plots
+time series for a specified reference latitude.
+"""
+
 from process_cmip6_data.api import model_diagnostics as mdiags
 from process_cmip6_data.src import netcdf as nf
 from process_cmip6_data.src import qc
@@ -13,8 +18,7 @@ def main():
         "experiment_1": cmd.experiment,
         "experiment_2": cmd.x2,
         "lat_eval": cmd.latitude,
-        "select_diag": cmd.seldiag
-    }
+        "select_diag": cmd.seldiag}
     
     data_paths = ["", ""]
     
@@ -105,7 +109,6 @@ def main():
             "\n".join([str(data_paths[k]) for k in [0,j+1]]),
             savefig=cmd.savefigs,
             subplots_adjust_kw={"top":0.86, "bottom":0.18})
-
 
 
 if __name__ == "__main__":
