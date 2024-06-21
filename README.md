@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12207486.svg)](https://doi.org/10.5281/zenodo.12207486)
+
 # process_cmip6_data
 
 This repository contains the code used to process data from the CMIP6 archive into the diagnostics required in the work by Aylmer et al. (2024) [^manuscript]. It is structured as a Python package with numerous Python (and some bash) scripts included in various subdirectories. It may be useful for/adaptable to processing other CMIP diagnostics. Processed data is saved in NetCDF format, with CF-compliant (as far as possible) metadata including full citations to the source data and relevant model descriptions. All of the code and scripts are documented individually with their specific usage; this README just gives a 'high-level' overview of the steps used to generate the data appearing in the aforementioned study. All processed data is being archived online and will be accessible soon (_link to be added_). Scripts are also included in this repository that reproduce the manuscript figures.
