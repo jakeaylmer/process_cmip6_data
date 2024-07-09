@@ -2,7 +2,7 @@
 
 # process_cmip6_data
 
-This repository contains the code used to process data from the CMIP6 archive into the diagnostics required in the work by Aylmer et al. (2024) [^manuscript]. It is structured as a Python package with numerous Python (and some bash) scripts included in various subdirectories. It may be useful for/adaptable to processing other CMIP diagnostics. Processed data is saved in NetCDF format, with CF-compliant (as far as possible) metadata including full citations to the source data and relevant model descriptions. All of the code and scripts are documented individually with their specific usage; this README just gives a 'high-level' overview of the steps used to generate the data appearing in the aforementioned study. All processed data is being archived online and will be accessible soon (_link to be added_). Scripts are also included in this repository that reproduce the manuscript figures.
+This repository contains the code used to process data from the CMIP6 archive into the diagnostics required in the work by Aylmer et al. (2024).[^manuscript] It is structured as a Python package with numerous Python (and some bash) scripts included in various subdirectories. It may be useful for/adaptable to processing other CMIP diagnostics. Processed data is saved in NetCDF format, with CF-compliant (as far as possible) metadata including full citations to the source data and relevant model descriptions. All of the code and scripts are documented individually with their specific usage; this README just gives a 'high-level' overview of the steps used to generate the data appearing in the aforementioned study. All processed data are available online.[^data] Scripts are also included in this repository that reproduce the manuscript[^manuscript] figures.
 
 
 ## Usage
@@ -75,11 +75,11 @@ Sometimes, CMIP6 data are inconsistent and the main processing scripts need adju
 
 
 ##### Atmospheric reanalyses
-In our work, we also analysed near-surface temperature in atmospheric reanalyses. Although these are not CMIP6 data, we used the same code and workflow as that for the CMIP6 data and thus include the relevant scripts in the subdirectory `/bespoke/atmospheric_reanalyses`. The various data and model citations are included in `src/metadata.py` and embedded in the netCDF outputs. _The processed datasets will be available with the archived CMIP6 processed data._
+In our work, we also analysed near-surface temperature in atmospheric reanalyses. Although these are not CMIP6 data, we used the same code and workflow as that for the CMIP6 data and thus include the relevant scripts in the subdirectory `/bespoke/atmospheric_reanalyses`. The various data and model citations are included in `src/metadata.py` and embedded in the netCDF outputs. The processed datasets are available with the archived CMIP6 processed data.[^data]
 
 
 ##### Passive microwave sea ice concentration data
-We also required observations of sea ice, so include the scripts here under `/bespoke/passive_microwave`. The raw data comes from passive microwave observations of sea ice concentration obtained from the National Snow and Ice Data Center (NSIDC)[^nsidc0051][^nsidc0079]. There are significantly more steps required to process this data (documented in the code) and so these scripts are largely independent of the `/sea_ice` scripts for CMIP6; however, they do make use of the `/src` code, including data citations in `/src/metadata.py` and using some of the functions in `/src/netcdf.py`. _The processed datasets will be available with the archived CMIP6 processed data._
+We also required observations of sea ice, so include the scripts here under `/bespoke/passive_microwave`. The raw data comes from passive microwave observations of sea ice concentration obtained from the National Snow and Ice Data Center (NSIDC).[^nsidc0051][^nsidc0079] There are significantly more steps required to process this data (documented in the code) and so these scripts are largely independent of the `/sea_ice` scripts for CMIP6; however, they do make use of the `/src` code, including data citations in `/src/metadata.py` and using some of the functions in `/src/netcdf.py`. The processed datasets are available with the archived CMIP6 processed data.[^data]
 
 
 
@@ -119,5 +119,6 @@ These are the versions of software and libraries used and thus known to work wit
 
 
 [^manuscript]: Aylmer, J. R., D. Ferreira, and D. L. Feltham, 2024: Impact of ocean heat transport on sea ice captured by a simple energy balance model, _Commun. Earth Environ._, accepted in principle May 2024 [preprint available at ResearchSquare, doi:[10.21203/rs.3.rs-3249087/v1](https://doi.org/10.21203/rs.3.rs-3249087/v1)]
+[^data]: Aylmer, J. R., 2024: Diagnostics from CMIP6, atmospheric reanalyses, and passive-microwave observations used to examine the impact of ocean heat transport on Arctic and Antarctic sea ice [Data Set], _University of Reading_, [doi:10.17864/1947.001333](https://doi.org/10.17864/1947.001333)
 [^nsidc0051]: DiGirolamo, N., C. L. Parkinson, D. J. Cavalieri, P. Gloersen, and H. J. Zwally, 2022: Sea ice concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS passive microwave data, version 2 [Data Set], Boulder, Colorado USA, NASA National Snow and Ice Data Center Distributed Active Archive Center, [doi:10.5067/MPYG15WAA4WX](https://doi.org/10.5067/MPYG15WAA4WX)
 [^nsidc0079]: Comiso, J. C. (2023): Bootstrap sea ice concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS, version 4 [Data Set], Boulder, Colorado USA, NASA National Snow and Ice Data Center Distributed Active Archive Center, [doi:10.5067/X5LG68MH013O](https://doi.org/10.5067/X5LG68MH013O)
