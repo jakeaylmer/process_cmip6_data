@@ -29,6 +29,8 @@ Similarly, the file `/paths/path_cmip6_processed_data.txt` needs to be edited wi
 
 There are a few other text files in `/paths` used for similar&#x2014;and in most cases self-explanatory&#x2014;purposes.
 
+Note that the path of the directory containing the root directory respository needs to be on the Python `PATH` environment variable, so that it is importable as a module within Python scripts (e.g., on Unix systems: `export PYTHONPATH=${PYTHONPATH}:/path/to/directory`).
+
 
 ### Source code
 There main processing code is under the `/src` directory. The scripts (see _Script directories_) are mostly just calls to these functions/routines:
